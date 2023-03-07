@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2023 at 04:34 PM
+-- Generation Time: Mar 07, 2023 at 06:18 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -67,8 +67,8 @@ CREATE TABLE `course` (
 --
 
 INSERT INTO `course` (`course_id`, `course_title`, `course_description`, `course_introduction`, `course_content`, `file_path`, `image_path`, `course_image`, `video_link`, `instructor_id`) VALUES
-(5, 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/./../Course/uploads/pdfs/./../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', '', 'https://www.youtube.com/ewrwe', 1),
-(6, 'Wireless Mobile Computing 2', 'Wireless Mobile Computing 2', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/./../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', '', 'https://www.youtube.com/ewrwe', 1),
+(5, 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', '', 'https://www.youtube.com/ewrwe', 1),
+(6, 'Wireless Mobile Computing 2', 'Wireless Mobile Computing 2', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', '', 'https://www.youtube.com/ewrwe', 1),
 (7, 'React Js', 'This is description', 'This is introduction', 'This is content', './../Course/uploads/pdfs/ReactJS-Guide.pdf', './../Course/uploads/images/react js.jpg', 'react js.jpg', 'https://www.youtube.com/watch?v=w7ejDZ8SWv8', 1);
 
 -- --------------------------------------------------------
@@ -125,7 +125,10 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `password`) VALUES
-(4, 'John', 'Doe', 'johndoe@gmail.com', '$2y$10$E45TdKaeHyrjO1L7gr2GDu7S9N5wsspBEcoYZ0QoswRC3dCVnJ0u6');
+(4, 'John', 'Doe', 'johndoe@gmail.com', '$2y$10$E45TdKaeHyrjO1L7gr2GDu7S9N5wsspBEcoYZ0QoswRC3dCVnJ0u6'),
+(5, 'faith', 'matara', 'matara@gmail.com', '$2y$10$W.s1UZ4ScG6H6I.MJfzkReHW9lNUVwIxrBiAuLqt5wFXAtdo24tHG'),
+(6, '!£$%', 'fddf', 'ma@gmail.com', '$2y$10$Ts8VcOJidOnOAx9VBO49AOk75k1.u8cm/IYW.P9zZQiaOigTxUzqq'),
+(7, 'john', 'doe', 'mata@gmail.com', '$2y$10$Z6Tj4Zl0whappSfgH4WV0uL9s7ZvkzujwApFO7l6Derh5w6E1wmg6');
 
 --
 -- Indexes for dumped tables
@@ -181,7 +184,7 @@ ALTER TABLE `instructor`
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

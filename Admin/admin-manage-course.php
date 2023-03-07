@@ -341,8 +341,8 @@ if (!isset($_SESSION["admin_id"])) {
                                                 <tr>
                                                     <td class="pr-0">
                                                         <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input js-check-selected-row" id="customCheck<?php echo $row['id']; ?>">
-                                                            <label class="custom-control-label" for="customCheck<?php echo $row['id']; ?>"><span class="text-hide">Check</span></label>
+                                                            <input type="checkbox" class="custom-control-input js-check-selected-row" id="customCheck<?php echo $row['course_id']; ?>">
+                                                            <label class="custom-control-label" for="customCheck<?php echo $row['course_id']; ?>"><span class="text-hide">Check</span></label>
                                                         </div>
                                                     </td>
                                                     <td class="js-lists-values-first-name"><?php echo $row['course_title']; ?></td>

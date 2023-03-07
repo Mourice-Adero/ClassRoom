@@ -520,12 +520,12 @@ if (isset($_POST["save-course"])) {
                                         </div>
                                         <div class="form-group mb-24pt">
                                             <label class="form-label" for="course_introduction">Course Introduction</label>
-                                            <input type="text" class="form-control form-control-lg" value="<?php echo $course_introduction ?>" name="course_introduction">
+                                            <textarea type="text" rows="5" class="form-control form-control-lg" name="course_introduction"><?php echo $course_introduction ?></textarea>
                                             <span class="help-block text-warning"><?php echo $course_introduction_err; ?></span>
                                         </div>
                                         <div class="form-group mb-24pt">
                                             <label class="form-label" for="course_content">Course Content</label>
-                                            <input type="text" class="form-control form-control-lg" value="<?php echo $course_content ?>" name="course_content">
+                                            <textarea type="text" rows="5" class="form-control form-control-lg" name="course_content"><?php echo $course_content ?></textarea>
                                             <span class="help-block text-warning"><?php echo $course_content_err; ?></span>
                                         </div>
 
