@@ -10,6 +10,7 @@ if (!isset($_SESSION["student_id"])) {
     header("location: ./../login.php");
     exit;
 }
+$student_id = $_SESSION["student_id"];
 $courses = get_courses(20);
 
 ?>
@@ -150,25 +151,50 @@ $courses = get_courses(20);
                                     $instructor = mysqli_fetch_assoc($get_instructor_name);
                                 ?>
 
-                                    <div class="col-md-6 col-lg-4 col-xl-3 card-group-row__col">
+                                    <div class="col-md-6 col-lg-4 col-xl-3 card-group-row__col" id="<?php echo $course['course_id']; ?>">
                                         <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay mdk-reveal js-mdk-reveal card-group-row__card" data-overlay-onload-show data-popover-onload-show data-force-reveal data-partial-height="44" data-toggle="popover" data-trigger="click">
-                                            <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="js-image" data-position="">
-                                                <img src="<?php echo $img_url ?>" alt="course" height="200" width="100%" onerror="this.onerror=null;this.src='./../Public/images/default_cover_image.png';">
-                                                <span class="overlay__content align-items-start justify-content-start">
-                                                    <span class="overlay__action card-body d-flex align-items-center">
-                                                        <i class="material-icons mr-4pt">play_circle_outline</i>
-                                                        <span class="card-title text-white">Preview</span>
-                                                    </span>
+                                            <img src="<?php echo $img_url ?>" alt="course" height="200" width="100%" onerror="this.onerror=null;this.src='./../Public/images/default_cover_image.png';">
+                                            <span class="overlay__content align-items-start justify-content-start">
+                                                <span class="overlay__action card-body d-flex align-items-center">
+                                                    <i class="material-icons mr-4pt">play_circle_outline</i>
+                                                    <span class="card-title text-white">Preview</span>
                                                 </span>
-                                            </a>
+                                            </span>
                                             <div class="mdk-reveal__content">
                                                 <div class="card-body">
                                                     <div class="d-flex">
                                                         <div class="flex">
-                                                            <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>"><?php echo $course["course_title"]; ?></a>
+                                                            <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>"><?php echo $course["course_title"]; ?></a>
                                                             <small class="text-50 font-weight-bold mb-4pt"><?php echo $instructor['first_name'] . ' ' . $instructor['last_name']; ?></small>
                                                         </div>
-                                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Remove Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite</a>
+                                                        <?php
+                                                        $course_id = $course['course_id'];
+                                                        $sql = "SELECT * FROM enroll_students WHERE student_id = '$student_id' AND course_id = '$course_id'";
+
+                                                        if ($stmt = $conn->prepare($sql)) {
+                                                            if ($stmt->execute()) {
+                                                                $stmt->store_result();
+                                                                if ($stmt->num_rows > 0) { ?>
+                                                                    <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-secondary h-50">CONTINUE</a>  
+                                                                <?php } else { ?>
+                                                                    <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id'] ?>">
+                                                                        <form action="./../Student/student-take-lesson.php?id=<?php echo $course['course_id'] ?>" method="post">
+                                                                            <input type="text" value="<?php echo $student_id ?>" name="student_id" hidden>
+                                                                            <input type="text" hidden value="<?php echo $instructor['first_name'] . ' ' . $instructor['last_name']; ?>" name="instructor_name">
+                                                                            <input type="text" hidden value="<?php echo $course['course_id']; ?>" name="course_id">
+                                                                            <input type="text" hidden value="<?php echo $course["course_title"]; ?>" name="course_name">
+                                                                            <input type="submit" value="ENROLL" name="enroll" class="btn btn-secondary">
+                                                                        </form>
+                                                                    </a>
+                                                        <?php }
+                                                            } else {
+                                                                echo "Oops! Something went wrong. Please try again later.";
+                                                            }
+
+                                                            $stmt->close();
+                                                        }
+                                                        ?>
+
                                                     </div>
                                                     <div class="d-flex">
                                                         <div class="rating flex">
@@ -238,7 +264,7 @@ $courses = get_courses(20);
                                                     </div>
                                                 </div>
                                                 <div class="col text-right">
-                                                    <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                    <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                                 </div>
                                             </div>
 
@@ -263,7 +289,7 @@ $courses = get_courses(20);
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
-                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
+                                        <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
                                             <img src="./../Public/images/paths/angular_430x168.png" alt="course">
                                             <span class="overlay__content">
                                                 <span class="overlay__action d-flex flex-column text-center">
@@ -276,10 +302,10 @@ $courses = get_courses(20);
                                         <div class="card-body flex">
                                             <div class="d-flex">
                                                 <div class="flex">
-                                                    <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>">Learn Angular fundamentals</a>
+                                                    <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>">Learn Angular fundamentals</a>
                                                     <small class="text-50 font-weight-bold mb-4pt">Elijah Murray</small>
                                                 </div>
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
                                             </div>
                                             <div class="d-flex">
                                                 <div class="rating flex">
@@ -360,7 +386,7 @@ $courses = get_courses(20);
                                                 </div>
                                             </div>
                                             <div class="col text-right">
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                             </div>
                                         </div>
 
@@ -372,7 +398,7 @@ $courses = get_courses(20);
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
-                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
+                                        <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
                                             <img src="./../Public/images/paths/swift_430x168.png" alt="course">
                                             <span class="overlay__content">
                                                 <span class="overlay__action d-flex flex-column text-center">
@@ -385,10 +411,10 @@ $courses = get_courses(20);
                                         <div class="card-body flex">
                                             <div class="d-flex">
                                                 <div class="flex">
-                                                    <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>">Build an iOS Application in Swift</a>
+                                                    <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>">Build an iOS Application in Swift</a>
                                                     <small class="text-50 font-weight-bold mb-4pt">Elijah Murray</small>
                                                 </div>
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
                                             </div>
                                             <div class="d-flex">
                                                 <div class="rating flex">
@@ -469,7 +495,7 @@ $courses = get_courses(20);
                                                 </div>
                                             </div>
                                             <div class="col text-right">
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                             </div>
                                         </div>
 
@@ -481,7 +507,7 @@ $courses = get_courses(20);
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
-                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
+                                        <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
                                             <img src="./../Public/images/paths/wordpress_430x168.png" alt="course">
                                             <span class="overlay__content">
                                                 <span class="overlay__action d-flex flex-column text-center">
@@ -494,10 +520,10 @@ $courses = get_courses(20);
                                         <div class="card-body flex">
                                             <div class="d-flex">
                                                 <div class="flex">
-                                                    <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>">Build a WordPress Website</a>
+                                                    <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>">Build a WordPress Website</a>
                                                     <small class="text-50 font-weight-bold mb-4pt">Elijah Murray</small>
                                                 </div>
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
                                             </div>
                                             <div class="d-flex">
                                                 <div class="rating flex">
@@ -578,7 +604,7 @@ $courses = get_courses(20);
                                                 </div>
                                             </div>
                                             <div class="col text-right">
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                             </div>
                                         </div>
 
@@ -590,7 +616,7 @@ $courses = get_courses(20);
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
-                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="left" data-height="140">
+                                        <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="left" data-height="140">
                                             <img src="./../Public/images/paths/react_430x168.png" alt="course">
                                             <span class="overlay__content">
                                                 <span class="overlay__action d-flex flex-column text-center">
@@ -603,10 +629,10 @@ $courses = get_courses(20);
                                         <div class="card-body flex">
                                             <div class="d-flex">
                                                 <div class="flex">
-                                                    <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>">Become a React Native Developer</a>
+                                                    <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>">Become a React Native Developer</a>
                                                     <small class="text-50 font-weight-bold mb-4pt">Elijah Murray</small>
                                                 </div>
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
                                             </div>
                                             <div class="d-flex">
                                                 <div class="rating flex">
@@ -687,7 +713,7 @@ $courses = get_courses(20);
                                                 </div>
                                             </div>
                                             <div class="col text-right">
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                             </div>
                                         </div>
 
@@ -708,7 +734,7 @@ $courses = get_courses(20);
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
-                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
+                                        <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
                                             <img src="./../Public/images/paths/sketch_430x168.png" alt="course">
                                             <span class="overlay__content">
                                                 <span class="overlay__action d-flex flex-column text-center">
@@ -721,10 +747,10 @@ $courses = get_courses(20);
                                         <div class="card-body flex">
                                             <div class="d-flex">
                                                 <div class="flex">
-                                                    <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>">Learn Sketch</a>
+                                                    <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>">Learn Sketch</a>
                                                     <small class="text-50 font-weight-bold mb-4pt">Elijah Murray</small>
                                                 </div>
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
                                             </div>
                                             <div class="d-flex">
                                                 <div class="rating flex">
@@ -805,7 +831,7 @@ $courses = get_courses(20);
                                                 </div>
                                             </div>
                                             <div class="col text-right">
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                             </div>
                                         </div>
 
@@ -817,7 +843,7 @@ $courses = get_courses(20);
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
-                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
+                                        <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
                                             <img src="./../Public/images/paths/flinto_430x168.png" alt="course">
                                             <span class="overlay__content">
                                                 <span class="overlay__action d-flex flex-column text-center">
@@ -830,10 +856,10 @@ $courses = get_courses(20);
                                         <div class="card-body flex">
                                             <div class="d-flex">
                                                 <div class="flex">
-                                                    <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>">Learn Flinto</a>
+                                                    <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>">Learn Flinto</a>
                                                     <small class="text-50 font-weight-bold mb-4pt">Elijah Murray</small>
                                                 </div>
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
                                             </div>
                                             <div class="d-flex">
                                                 <div class="rating flex">
@@ -914,7 +940,7 @@ $courses = get_courses(20);
                                                 </div>
                                             </div>
                                             <div class="col text-right">
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                             </div>
                                         </div>
 
@@ -926,7 +952,7 @@ $courses = get_courses(20);
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
-                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
+                                        <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
                                             <img src="./../Public/images/paths/photoshop_430x168.png" alt="course">
                                             <span class="overlay__content">
                                                 <span class="overlay__action d-flex flex-column text-center">
@@ -939,10 +965,10 @@ $courses = get_courses(20);
                                         <div class="card-body flex">
                                             <div class="d-flex">
                                                 <div class="flex">
-                                                    <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>">Learn Photoshop</a>
+                                                    <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>">Learn Photoshop</a>
                                                     <small class="text-50 font-weight-bold mb-4pt">Elijah Murray</small>
                                                 </div>
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
                                             </div>
                                             <div class="d-flex">
                                                 <div class="rating flex">
@@ -1023,7 +1049,7 @@ $courses = get_courses(20);
                                                 </div>
                                             </div>
                                             <div class="col text-right">
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                             </div>
                                         </div>
 
@@ -1035,7 +1061,7 @@ $courses = get_courses(20);
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
-                                        <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
+                                        <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
                                             <img src="./../Public/images/paths/figma_430x168.png" alt="course">
                                             <span class="overlay__content">
                                                 <span class="overlay__action d-flex flex-column text-center">
@@ -1048,10 +1074,10 @@ $courses = get_courses(20);
                                         <div class="card-body flex">
                                             <div class="d-flex">
                                                 <div class="flex">
-                                                    <a class="card-title" href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>">Learn Figma</a>
+                                                    <a class="card-title" href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>">Learn Figma</a>
                                                     <small class="text-50 font-weight-bold mb-4pt">Elijah Murray</small>
                                                 </div>
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" data-toggle="tooltip" data-title="Add Favorite" data-placement="top" data-boundary="window" class="ml-4pt material-icons text-20 card-course__icon-favorite">favorite_border</a>
                                             </div>
                                             <div class="d-flex">
                                                 <div class="rating flex">
@@ -1132,7 +1158,7 @@ $courses = get_courses(20);
                                                 </div>
                                             </div>
                                             <div class="col text-right">
-                                                <a href="./../Student/student-take-course.php?course_id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
+                                                <a href="./../Student/student-take-lesson.php?id=<?php echo $course['course_id']; ?>" class="btn btn-primary">Enroll</a>
                                             </div>
                                         </div>
 

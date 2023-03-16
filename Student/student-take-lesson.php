@@ -9,12 +9,41 @@ if (!isset($_SESSION["student_id"])) {
     header("location: ./../login.php");
     exit;
 }
+if (isset($_POST["enroll"])) {
+    // echo "<script>alert('submitted!')</script>";
+    $student_id = $_POST["student_id"];
+    $course_name = $_POST["course_name"];
+    $course_id = $_POST['course_id'];
+    $instructor_name = $_POST['instructor_name'];
+
+    $sql = "SELECT * FROM enroll_students WHERE student_id = '$student_id' AND course_id = '$course_id'";
+
+    if ($stmt = $conn->prepare($sql)) {
+        if ($stmt->execute()) {
+            $stmt->store_result();
+
+            if ($stmt->num_rows == 1) {
+                echo "<script>alert('You are already enrolled. Continue Learning!')</script>";
+            } else {
+                $sql = "INSERT INTO enroll_students (student_id, course_name, course_id, instructor_name) VALUES ('$student_id', '$course_name', '$course_id', '$instructor_name')";
+                $execute = mysqli_query($conn, $sql);
+                if ($execute) {
+                    echo "<script>alert('Enrolled Successfully')</script>";
+                }
+            }
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
+        }
+
+        $stmt->close();
+    }
+}
 
 
 
 // Define variables and initialize with empty values
 $student_id = $_SESSION["student_id"];
-$course_id = $_GET['course_id']; // Get the course ID from the URL parameter
+$course_id = $_GET['id']; // Get the course ID from the URL parameter
 $course = get_course($course_id);
 
 // fetch the instructor details for the current course
@@ -128,7 +157,7 @@ mysqli_stmt_close($stmt);
                     </a>
                     <ul class="nav navbar-nav d-none d-sm-flex flex justify-content-start ml-8pt">
                         <li class="nav-item active">
-                            <a href="student-take-course.php" class="nav-link">Course</a>
+                            <a href="./student-my-courses.php" class="nav-link">My Courses</a>
                         </li>
 
 
@@ -361,7 +390,7 @@ mysqli_stmt_close($stmt);
                                         </a>
                                     </div>
                                     <div class="player__embed d-none">
-                                        <iframe class="embed-responsive-item" src="<?php echo $course['video_link']?>" allowfullscreen=""></iframe>
+                                        <iframe class="embed-responsive-item" src="<?php echo $course['video_link'] ?>" allowfullscreen=""></iframe>
                                     </div>
                                 </div>
                             </div>
@@ -424,20 +453,26 @@ mysqli_stmt_close($stmt);
                                     <div class="list-group-item p-3">
                                         <h5 class="m-1">Introduction</h5>
                                         <div class="row align-items-start">
-                                        <?php echo $course["course_introduction"];?> <br>
+                                            <?php echo $course["course_introduction"]; ?> <br>
                                         </div>
                                     </div>
 
                                     <div class="list-group-item p-3">
                                         <h5 class="m-1">Content</h5>
                                         <div class="row align-items-start">
-                                            <?php echo $course["course_content"];?> <br>
+                                            <?php echo $course["course_content"]; ?> <br>
                                         </div>
                                     </div>
                                     <div class="list-group-item p-3">
                                         <h5 class="m-1">Course PDF</h5>
                                         <div class="row align-items-start">
-                                        <a href="./student-read-book.php?course_id=<?= $course['course_id'] ?>" class="btn btn-primary">Read Book</a> <br>
+                                            <a href="./student-read-book.php?course_id=<?= $course['course_id'] ?>" class="btn btn-primary">Read Book</a> <br>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item p-3">
+                                        <h5 class="m-1">Take Quiz</h5>
+                                        <div class="row align-items-start">
+                                            <a href="./student-take-quiz.php?course_id=<?= $course['course_id'] ?>" class="btn btn-primary">Take Quiz</a> <br>
                                         </div>
                                     </div>
 

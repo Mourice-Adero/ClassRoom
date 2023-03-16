@@ -7,198 +7,23 @@ if (!isset($_SESSION["instructor_id"])) {
     header("location: ./login.php");
     exit;
 }
-include './../Include/config.php';
+require_once './../Include/config.php';
 
-// Define variables and initialize with empty values
-$instructor_id = $_SESSION["instructor_id"];
-$course_id = $_GET['course_id']; // Get the course ID from the URL parameter
 
+$course_id = $_GET['id'];
 // Query the database to get the course data for the specified ID
-$sql = "SELECT * FROM course WHERE course_id = ? AND instructor_id = ?";
+$sql = "SELECT * FROM course WHERE course_id = '$course_id'";
 $stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "ii", $course_id, $instructor_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $row = mysqli_fetch_assoc($result);
 
 // Store the retrieved course data in variables
 $course_title = $row['course_title'];
-$course_description = $row['course_description'];
-$course_introduction = $row['course_introduction'];
-$course_content = $row['course_content'];
-$image_path = $row['image_path'];
-$file_path = $row['file_path'];
-$video_link = $row['video_link'];
-
-// Close the database connection and statement
-mysqli_stmt_close($stmt);
-
-$instructor_id_err = $course_title_err = $course_description_err = $course_introduction_err = $course_content_err = $file_err = $video_link_err = $image_err = "";
-
-// Processing form data when form is submitted
-if (isset($_POST["save-course"])) {
-    // Validate course_title
-    if (empty(trim($_POST["course_title"]))) {
-        $course_title_err = "Please enter course title.";
-    } else {
-        // Prepare a select statement
-        $sql = "SELECT course_id FROM course WHERE course_title = ?";
-        if ($stmt = $conn->prepare($sql)) {
-            // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("s", $param_course_title);
-
-            // Set parameters
-            $param_course_title = htmlspecialchars(trim($_POST["course_title"]));
-
-            // Attempt to execute the prepared statement
-            if ($stmt->execute()) {
-                // Store result
-                $stmt->store_result();
-                if ($stmt->num_rows == 0) {
-                    $course_title = htmlspecialchars(trim($_POST["course_title"]));
-                } else {
-                    $course_title_err = "Course title already exists.";
-                }
-            } else {
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-
-            // Close statement
-            $stmt->close();
-        }
-    }
-
-    // Validate course_description
-    if (empty(trim($_POST["course_description"]))) {
-        $course_description_err = "Please enter course description.";
-    } else {
-        $course_description = htmlspecialchars(trim($_POST["course_description"]));
-    }
-
-    // Validate course_introduction
-    if (empty(trim($_POST["course_introduction"]))) {
-        $course_introduction_err = "Please enter section title.";
-    } else {
-        $course_introduction = htmlspecialchars(trim($_POST["course_introduction"]));
-    }
-
-    // Validate course_content
-    if (empty(trim($_POST["course_content"]))) {
-        $course_content_err = "Please enter section description.";
-    } else {
-        $course_content = htmlspecialchars(trim($_POST["course_content"]));
-    }
-    // Validate course_image
-    if ($_FILES["course_image"]["error"] == 0) {
-        $file_size = $_FILES["course_image"]["size"];
-        $file_type = $_FILES["course_image"]["type"];
-        $file_name = $_FILES["course_image"]["name"];
-        $file_tmp_name = $_FILES["course_image"]["tmp_name"];
-
-        // Check file size
-        if ($file_size > 30000000) {
-            $file_err = "File size must be less than 30 MB.";
-        }
-
-        // Allow certain file formats
-        $allowed_types = array("image/jpeg", "image/png", "image/gif");
-        if (!in_array($file_type, $allowed_types)) {
-            $file_err = "Only JPG, PNG and GIF files are allowed.";
-        }
-
-        if (empty($file_err)) {
-            // Define upload path
-            $upload_path = "../Course/uploads/images/" . basename($file_name);
-            // Set the path for the image in the database
-            $course_image = basename($file_name);
-
-            // Move file from temporary location to destination directory
-            if (move_uploaded_file($file_tmp_name, $upload_path)) {
-                // File uploaded successfully
-            } else {
-                $file_err = "There was an error uploading your file.";
-            }
-        }
-    }
-
-    if (!empty($course_image)) {
-        $image_path = "./../Course/uploads/images/" . $course_image;
-    }
-
-    if (!empty($_FILES["file"]["name"])) {
-        $file_name = $_FILES["file"]["name"];
-        $file_size = $_FILES["file"]["size"];
-        $file_type = $_FILES["file"]["type"];
-        $file_tmp_name = $_FILES["file"]["tmp_name"];
-
-        // Check file size
-        if ($file_size > 100000000) {
-            $file_err = "File size must be less than 100 MB.";
-        }
-
-        // Allow certain file formats
-        $allowed_types = array("application/pdf");
-        if (!in_array($file_type, $allowed_types)) {
-            $file_err = "Only PDF files are allowed.";
-        }
-
-        if (empty($file_err)) {
-            // Define upload path
-            $upload_path = "../Course/uploads/pdfs/" . basename($file_name);
-            // Set the path for the file in the database
-            $file_path = basename($file_name);
-
-            // Move file from temporary location to destination directory
-            if (move_uploaded_file($file_tmp_name, $upload_path)) {
-                // File uploaded successfully
-            } else {
-                $file_err = "There was an error uploading your file.";
-            }
-        }
-    }
-
-    if (!empty($file_path)) {
-        $file_path = "./../Course/uploads/pdfs/" . $file_path;
-    }
-    // Validate video_link
-    if (!empty(trim($_POST["video_link"]))) {
-        $video_link = trim($_POST["video_link"]);
-        if (!filter_var($video_link, FILTER_VALIDATE_URL)) {
-            $video_link_err = "Please enter a valid video link.";
-        }
-    }
-
-    // Update course data in the database
-    if (empty($course_title_err) && empty($course_description_err) && empty($course_introduction_err) && empty($course_content_err) && empty($file_err) && empty($video_link_err) && empty($image_err)) {
-        $sql = "UPDATE course SET course_title = ?, course_description = ?, course_introduction = ?, course_content = ?, image_path = ?, file_path = ?, video_link = ? WHERE course_id = ?";
-        if ($stmt = mysqli_prepare($conn, $sql)) {
-            mysqli_stmt_bind_param($stmt, "sssssssi", $param_course_title, $param_course_description, $param_course_introduction, $param_course_content, $param_image_path, $param_file_path, $param_video_link, $course_id);
-            $param_course_title = $course_title;
-            $param_course_description = $course_description;
-            $param_course_introduction = $course_introduction;
-            $param_course_content = $course_content;
-            $param_image_path = $image_path;
-            $param_file_path = $file_path;
-            $param_video_link = $video_link;
-            if (mysqli_stmt_execute($stmt)) {
-                // Course data updated successfully
-            } else {
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-            mysqli_stmt_close($stmt);
-        }
-    }
-
-
-    // Close connection
-    $conn->close();
-}
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 
 
 <head>
@@ -470,14 +295,14 @@ if (isset($_POST["save-course"])) {
                             <div class="flex d-flex flex-column flex-sm-row align-items-center">
 
                                 <div class="mb-24pt mb-sm-0 mr-sm-24pt">
-                                    <h2 class="mb-0">Update Course</h2>
+                                    <h2 class="mb-0"><?php echo $course_title ?> Quizzes</h2>
 
                                     <ol class="breadcrumb p-0 m-0">
                                         <li class="breadcrumb-item"><a href="./instructor-dashboard.php">Dashboard</a></li>
 
                                         <li class="breadcrumb-item active">
 
-                                            Add Course
+                                            Course Quizzes
 
                                         </li>
 
@@ -494,88 +319,52 @@ if (isset($_POST["save-course"])) {
 
                             <div class="row">
                                 <div class="col-md-8">
-                                    <form method="post" enctype="multipart/form-data">
-                                        <div class="page-separator">
-                                            <div class="page-separator__text">Basic information</div>
-                                        </div>
-                                        <div class="form-group mb-24pt">
-                                            <label class="form-label" for="course_title">Course title</label>
-                                            <input type="text" class="form-control form-control-lg" value="<?php echo $course_title ?>" name="course_title">
-                                            <span class="help-block text-warning"><?php echo $course_title_err; ?></span>
-                                        </div>
+                                    <div class="page-separator">
+                                        <div class="page-separator__text">Questions</div>
+                                    </div>
+                                    <div class="form-group mb-24pt">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Question</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $query = mysqli_query($conn, "SELECT * FROM quizzes WHERE course_id = '$course_id'");
+                                                if ($query) {
+                                                    $counter = 1; // initialize counter variable
+                                                    while ($question = mysqli_fetch_array($query)) {
+                                                        echo "<tr>
+                    <td>" . $counter . "</td> <!-- display counter variable -->
+                    <td>" . $question['question'] . "</td>
+                    <td>
+                        <a href='./instructor-edit-question.php?id=" . $question['id'] . "' class='btn btn-secondary'>Edit</a>
+                        <a href='./instructor-remove-question.php?id=" . $question['id'] . "' class='btn btn-warning'>Remove</a>
+                    </td>
+                </tr>";
+                                                        $counter++; // increment counter variable
+                                                    }
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
 
-                                        <div class="form-group mb-32pt">
-                                            <label class="form-label" for="course_description">Description</label>
-                                            <textarea class="form-control" rows="3" name="course_description"><?php echo $course_description ?></textarea>
-                                            <!-- <div style="height: 150px;" class="mb-0" data-toggle="quill" data-quill-placeholder="Course description">
-                                                <h1>Hello World!</h1>
-                                                <p>Some initial <strong>bold</strong> text</p>
-                                                <p><br></p>
-                                            </div> -->
-                                            <span class="help-block text-warning"><?php echo $course_description_err; ?></span>
-                                        </div>
-
-                                        <div class="page-separator">
-                                            <div class="page-separator__text">Sections</div>
-                                        </div>
-                                        <div class="form-group mb-24pt">
-                                            <label class="form-label" for="course_introduction">Course Introduction</label>
-                                            <textarea type="text" rows="5" class="form-control form-control-lg" name="course_introduction"><?php echo $course_introduction ?></textarea>
-                                            <span class="help-block text-warning"><?php echo $course_introduction_err; ?></span>
-                                        </div>
-                                        <div class="form-group mb-24pt">
-                                            <label class="form-label" for="course_content">Course Content</label>
-                                            <textarea type="text" rows="5" class="form-control form-control-lg" name="course_content"><?php echo $course_content ?></textarea>
-                                            <span class="help-block text-warning"><?php echo $course_content_err; ?></span>
-                                        </div>
-
-                                        <div class="form-group mb-32pt">
-                                            <label class="form-label" for="file">Content File (PDF only)</label>
-                                            <input type="file" name="file" class="form-control-file <?php echo (!empty($file_err)) ? 'is-invalid' : ''; ?>">
-                                            <span class="help-block text-warning"><?php echo $file_err; ?></span>
-                                        </div>
-
-                                        <div class="form-group mb-32pt">
-                                            <label class="form-label">Display Image</label>
-                                            <input type="file" name="course_image" class="form-control-file <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>">
-                                            <span class="help-block text-warning"><?php echo $image_err; ?></span>
-                                        </div>
-
+                                    </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="page-separator">
-                                        <div class="page-separator__text">Add Quiz</div>
-                                    </div>
-
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <a href="./course-questions.php?id=<?php echo $course_id; ?>" class="btn btn-secondary">Add Quiz</a>
-                                        </div>
-                                    </div>
-                                    <div class="page-separator">
-                                        <div class="page-separator__text">Video</div>
-                                    </div>
-
-                                    <div class="card">
-                                        <div class="embed-responsive embed-responsive-16by9">
-                                            <iframe class="embed-responsive-item" src="<?php echo $video_link; ?>" allowfullscreen=""></iframe>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label class="form-label">URL</label>
-                                                <input type="text" class="form-control" name="video_link" value="<?php echo $video_link; ?>" placeholder="Enter Video URL">
-                                                <span class="help-block text-warning"><?php echo $video_link_err; ?></span>
-                                            </div>
-                                        </div>
+                                        <div class="page-separator__text">Add</div>
                                     </div>
                                     <div class="card">
                                         <div class="form-group">
                                             <div class="card-header text-center form-group">
-                                                <input class="btn btn-accent" type="submit" name="save-course" value="Update Course"></input>
+                                                <a class="btn btn-accent" href="./instructor-add-question.php?id=<?php echo $course_id; ?>">Add Question</a>
                                             </div>
                                         </div>
                                     </div>
-                                    </form>
                                 </div>
                             </div>
 
@@ -684,6 +473,5 @@ if (isset($_POST["save-course"])) {
     <!-- App Settings (safe to remove) -->
     <!-- <script src="./../Public/js/app-settings.js"></script> -->
 </body>
-
 
 </html>
