@@ -9,6 +9,18 @@ if (!isset($_SESSION["student_id"])) {
     header("location: ./../login.php");
     exit;
 }
+
+
+// Define variables and initialize with empty values
+$student_id = $_SESSION["student_id"];
+$course_id = $_GET['id']; // Get the course ID from the URL parameter
+$course = get_course($course_id);
+
+// fetch the instructor details for the current course
+$instructor_id = $course['instructor_id'];
+$get_instructor_name = mysqli_query($conn, "SELECT first_name, last_name FROM instructor WHERE id = $instructor_id");
+$instructor = mysqli_fetch_assoc($get_instructor_name);
+
 if (isset($_POST["enroll"])) {
     // echo "<script>alert('submitted!')</script>";
     $student_id = $_POST["student_id"];
@@ -25,7 +37,7 @@ if (isset($_POST["enroll"])) {
             if ($stmt->num_rows == 1) {
                 echo "<script>alert('You are already enrolled. Continue Learning!')</script>";
             } else {
-                $sql = "INSERT INTO enroll_students (student_id, course_name, course_id, instructor_name) VALUES ('$student_id', '$course_name', '$course_id', '$instructor_name')";
+                $sql = "INSERT INTO enroll_students (student_id, course_name, course_id, instructor_name, instructor_id) VALUES ('$student_id', '$course_name', '$course_id', '$instructor_name', '$instructor_id')";
                 $execute = mysqli_query($conn, $sql);
                 if ($execute) {
                     echo "<script>alert('Enrolled Successfully')</script>";
@@ -38,19 +50,6 @@ if (isset($_POST["enroll"])) {
         $stmt->close();
     }
 }
-
-
-
-// Define variables and initialize with empty values
-$student_id = $_SESSION["student_id"];
-$course_id = $_GET['id']; // Get the course ID from the URL parameter
-$course = get_course($course_id);
-
-// fetch the instructor details for the current course
-$instructor_id = $course['instructor_id'];
-$get_instructor_name = mysqli_query($conn, "SELECT first_name, last_name FROM instructor WHERE id = $instructor_id");
-$instructor = mysqli_fetch_assoc($get_instructor_name);
-
 
 // Query the database to get the course data for the specified ID
 $sql = "SELECT * FROM course WHERE course_id = ?";

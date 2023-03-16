@@ -341,8 +341,8 @@ $course_title = $row['course_title'];
                     <td>" . $counter . "</td> <!-- display counter variable -->
                     <td>" . $question['question'] . "</td>
                     <td>
-                        <a href='./instructor-edit-question.php?id=" . $question['id'] . "' class='btn btn-secondary'>Edit</a>
-                        <a href='./instructor-remove-question.php?id=" . $question['id'] . "' class='btn btn-warning'>Remove</a>
+                        <a href='./instructor-edit-question.php?id=" . $course_id . "&q_id=" .$question['id'] . "' class='btn btn-secondary'>Edit</a>
+                        <a href='./instructor-remove-question.php?id=" . $course_id . "&q_id=" .$question['id'] . "' class='btn btn-warning'>Remove</a>
                     </td>
                 </tr>";
                                                         $counter++; // increment counter variable
