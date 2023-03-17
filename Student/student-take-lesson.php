@@ -471,7 +471,7 @@ mysqli_stmt_close($stmt);
                                     <div class="list-group-item p-3">
                                         <h5 class="m-1">Take Quiz</h5>
                                         <div class="row align-items-start">
-                                            <a href="./student-take-quiz.php?course_id=<?= $course['course_id'] ?>" class="btn btn-primary">Take Quiz</a> <br>
+                                            <a href="./student-take-quiz.php?id=<?= $course['course_id'] ?>" class="btn btn-primary">Take Quiz</a> <br>
                                         </div>
                                     </div>
 
