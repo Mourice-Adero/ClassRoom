@@ -13,7 +13,6 @@ if (!isset($_SESSION["student_id"])) {
 
 // Define variables and initialize with empty values
 $student_id = $_SESSION["student_id"];
-// $course_id = $_GET['id']; // Get the course ID from the URL parameter
 
 // Retrieve the correct answers for the specified course
 $course_id = $_SESSION['course_id'];
@@ -21,10 +20,7 @@ $sql = "SELECT * FROM quizzes WHERE course_id = '$course_id'";
 $result = mysqli_query($conn, $sql);
 if (!$result) {
     die('Error retrieving quiz questions: ' . mysqli_error($conn));
-} else {
-    echo "<script>alert('Answers are loaded!')</script>";
 }
-
 
 $course = get_course($course_id);
 // fetch the instructor details for the current course
@@ -32,37 +28,119 @@ $instructor_id = $course['instructor_id'];
 $get_instructor_name = mysqli_query($conn, "SELECT first_name, last_name FROM instructor WHERE id = $instructor_id");
 $instructor = mysqli_fetch_assoc($get_instructor_name);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    echo "<script>alert('Form Submitted!')</script>";
-    $score = 0;
-    // Insert a new record in the quiz_results table
-    $date = date('Y-m-d H:i:s');
-    $sql = "INSERT INTO quiz_results (student_id, course_id, date) VALUES ('$student_id', '$course_id', '$date')";
-    if (!mysqli_query($conn, $sql)) {
-        die('Error inserting quiz results: ' . mysqli_error($conn));
+if (isset($_POST['submit_answers'])) {
+    // Retrieve the course ID from the session
+    $course_id = $_SESSION['course_id'];
+
+    if (!$result) {
+        die('Error retrieving quiz questions: ' . mysqli_error($conn));
     }
-    // Get the ID of the inserted record
-    $quiz_result_id = mysqli_insert_id($conn);
-    // mysqli_data_seek($result, 0); // reset the internal pointer of the result set
-    $i = 1;
-    while ($row = mysqli_fetch_assoc($result)) {
-        if (isset($_POST['answer'][$i])) {
-            echo "<script>alert('Answers submitted!')</script>";
-            $student_answer = $_POST['answer'][$i];
+
+    $get_done_quiz = mysqli_query($conn, "SELECT quiz_id FROM quiz_results WHERE student_id = '$student_id' AND course_id = '$course_id' ");
+    $done_quiz = mysqli_fetch_assoc($get_done_quiz);
+    if ($done_quiz) {
+        // Initialize variables for scoring the quiz
+        $total_questions = mysqli_num_rows($result);
+        $total_correct = 0; // Initialize total_correct to 0
+        $done_quiz_id = $done_quiz['quiz_id'];
+
+        // Retrieve the questions for the specified course
+        $sql = "SELECT * FROM quizzes WHERE course_id = '$course_id'";
+        $result = mysqli_query($conn, $sql);
+
+        // Loop through each question and check the student's answer
+        while ($row = mysqli_fetch_assoc($result)) {
+            $answer_id = $row['id'];
+            $student_answer = $_POST['answer'][$answer_id];
             $correct_answer = $row['answer'];
             if ($student_answer == $correct_answer) {
-                $score++;
+                $total_correct++;
             }
         }
-        $i++;
+
+        // Calculate the student's score as a percentage
+        $score = round(($total_correct / $total_questions) * 100);
+
+        // Insert the quiz results into the quiz_results table
+        $student_id = $_SESSION['student_id'];
+        $submitted_at = date('Y-m-d H:i:s');
+        $sql = "UPDATE quiz_results SET score = '$score', date = '$submitted_at' WHERE quiz_id = '$done_quiz_id'";
+        $result = mysqli_query($conn, $sql);
+        $get_prev_archeivement = mysqli_query($conn, "SELECT arch_id, number FROM achievements WHERE student_id = '$student_id' AND course_id = '$course_id' ");
+        $prev_archeivement = mysqli_fetch_assoc($get_prev_archeivement);
+        // process acheivement
+        if ($score = 100) {
+            $submitted_at = date('Y-m-d H:i:s');
+            if ($prev_archeivement) {
+                $arch_number = $prev_archeivement['number'];
+                $arch_id = $prev_archeivement['arch_id'];
+                $arch_number = $arch_number + 1;
+                $sql = "UPDATE achievements SET score = '$score', date = '$submitted_at', number = '$arch_number' WHERE arch_id = '$arch_id'";
+                $result = mysqli_query($conn, $sql);
+                $sql2 = "UPDATE enroll_students SET completed = 'Yes' WHERE student_id = '$student_id' AND course_id = '$course_id'";
+                $result2 = mysqli_query($conn, $sql2);
+            } else {
+                $sql = "INSERT INTO achievements (score, date, number, student_id, course_id) VALUES ('$score', '$submitted_at', '1', '$student_id', '$course_id')";
+                $result = mysqli_query($conn, $sql);
+                $sql2 = "UPDATE enroll_students SET completed = 'Yes' WHERE student_id = '$student_id' AND course_id = '$course_id'";
+                $result2 = mysqli_query($conn, $sql2);
+            }
+        }
+
+        if (!$result) {
+            die('Error inserting quiz results: ' . mysqli_error($conn));
+        }
+    } else {
+        // Initialize variables for scoring the quiz
+        $total_questions = mysqli_num_rows($result);
+        $total_correct = 0; // Initialize total_correct to 0
+
+        // Retrieve the questions for the specified course
+        $sql = "SELECT * FROM quizzes WHERE course_id = '$course_id'";
+        $result = mysqli_query($conn, $sql);
+        // Loop through each question and check the student's answer
+        while ($row = mysqli_fetch_assoc($result)) {
+            $answer_id = $row['id'];
+            $student_answer = $_POST['answer'][$answer_id];
+            $correct_answer = $row['answer'];
+            if ($student_answer == $correct_answer) {
+                $total_correct++;
+            }
+        }
+
+        // Calculate the student's score as a percentage
+        $score = round(($total_correct / $total_questions) * 100);
+
+        // Insert the quiz results into the quiz_results table
+        $student_id = $_SESSION['student_id'];
+        $submitted_at = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO quiz_results (student_id, course_id, score, date) VALUES ('$student_id', '$course_id', '$score', '$submitted_at')";
+        $result = mysqli_query($conn, $sql);
+
+        // process acheivement
+        if ($prev_archeivement) {
+            $arch_number = $prev_archeivement['number'];
+            $arch_id = $prev_archeivement['arch_id'];
+            $arch_number = $arch_number + 1;
+            $sql = "UPDATE achievements SET score = '$score', date = '$submitted_at', number = '$arch_number' WHERE arch_id = '$arch_id'";
+            $result = mysqli_query($conn, $sql);
+            $sql2 = "UPDATE enroll_students SET completed = 'Yes' WHERE student_id = '$student_id' AND course_id = '$course_id'";
+            $result2 = mysqli_query($conn, $sql2);
+        } else {
+            $sql = "INSERT INTO achievements (score, date, number, student_id, course_id) VALUES ('$score', '$submitted_at', '1', '$student_id', '$course_id')";
+            $result = mysqli_query($conn, $sql);
+            $sql2 = "UPDATE enroll_students SET completed = 'Yes' WHERE student_id = '$student_id' AND course_id = '$course_id'";
+            $result2 = mysqli_query($conn, $sql2);
+        }
+
+        if (!$result) {
+            die('Error inserting quiz results: ' . mysqli_error($conn));
+        }
     }
-    $total_questions = mysqli_num_rows($result);
-    // Update the quiz_results table with the score and percentage correct
-    $percent_correct = round($score / $total_questions * 100, 2);
-    $sql = "UPDATE quiz_results SET score = $score, percent_correct = $percent_correct WHERE quiz_id = $quiz_result_id";
-    if (!mysqli_query($conn, $sql)) {
-        die('Error updating quiz results: ' . mysqli_error($conn));
-    }
+} else {
+    // If the form was not submitted, redirect the user to the quiz page
+    header("Location: student-take-quiz.php");
+    exit();
 }
 ?>
 
@@ -344,10 +422,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="nav-item navbar-list__item">
                                     <div class="d-flex align-items-center flex-nowrap">
                                         <div class="mr-16pt">
-                                            <a href="student-take-course.php"><img src="<?php echo $course['image_path'] ?>" width="40" alt="Angular" class="rounded"></a>
+                                            <a href="student-take-lesson.php?id=<?php echo $course_id ?>"><img src="<?php echo $course['image_path'] ?>" width="40" alt="Angular" class="rounded"></a>
                                         </div>
                                         <div class="flex">
-                                            <a href="student-take-course.php" class="card-title text-body mb-0"><?php echo $course['course_title'] ?></a>
+                                            <a href="student-take-lesson.php?id=<?php echo $course_id ?>" class="card-title text-body mb-0"><?php echo $course['course_title'] ?></a>
                                             <p class="lh-1 d-flex align-items-center mb-0">
                                                 <span class="text-50 small font-weight-bold mr-8pt"><?php echo $instructor['first_name'] . ' ' . $instructor['last_name']; ?></span>
                                                 <span class="text-50 small">Software Engineer and Developer</span>
@@ -362,13 +440,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="mdk-box__content">
                             <div class="py-64pt text-center text-sm-left">
                                 <div class="container d-flex flex-column justify-content-center align-items-center">
-                                    <p class="lead text-white-50 measure-lead-max mb-0">Submited on 02 Jan 2019</p>
+                                    <p class="lead text-white-50 measure-lead-max mb-0">Submited on <?php echo $submitted_at; ?></p>
                                     <h1 class="text-white mb-24pt">
                                         <?php
-                                        echo '<p>You answered ' . $score . ' out of ' . $total_questions . ' questions correctly (' . $percent_correct . '%).</p>';
-                                        ?>
+                                        echo '<p>You answered ' . $total_correct . ' out of ' . $total_questions . ' questions correctly (' . $score . '%).</p>'; ?>
                                     </h1>
                                     <a href="student-take-quiz.php?id=<?php echo $course_id; ?>" class="btn btn-outline-white">Restart quiz</a>
+                                    <?php
+                                    if ($score == 100) {
+                                        $sql = "SELECT * FROM achievements WHERE course_id = '$course_id' and student_id = '$student_id'";
+                                        $result = mysqli_query($conn, $sql);
+                                        if ($result) {
+                                            $row = mysqli_fetch_assoc($result);
+                                            $all_acheivements = $row['number'];
+                                            $arch_id = $row['arch_id'];
+                                            echo "<p class='p-2 text-white'>Congratulations! You have added one more acheivement to this course.</p>";
+                                        } else {
+                                            echo "<p class='p-2 text-white'>Congratulations! You have received 1 more acheivement in this course.</p>";
+                                        }
+                                    }
+                                    echo "<p class='p-2 text-white'>You have " . $all_acheivements . " acheivement(s)</p>";
+                                    echo '<a href="student-my-acheivements.php?id=' . $arch_id . '" class="btn btn-outline-white">See Achievements</a>';
+                                    ?>
                                 </div>
                             </div>
                         </div>

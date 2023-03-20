@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 17, 2023 at 03:40 PM
+-- Generation Time: Mar 20, 2023 at 11:59 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `classroom`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `achievements`
+--
+
+CREATE TABLE `achievements` (
+  `arch_id` int(15) NOT NULL,
+  `student_id` int(15) NOT NULL,
+  `course_id` int(15) NOT NULL,
+  `date` datetime(6) NOT NULL,
+  `number` int(15) NOT NULL,
+  `score` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `achievements`
+--
+
+INSERT INTO `achievements` (`arch_id`, `student_id`, `course_id`, `date`, `number`, `score`) VALUES
+(3, 4, 6, '2023-03-19 17:12:39.000000', 4, 100),
+(4, 4, 5, '2023-03-20 11:55:14.000000', 8, 100),
+(5, 4, 5, '2023-03-19 16:52:58.000000', 1, 83);
 
 -- --------------------------------------------------------
 
@@ -67,7 +91,7 @@ CREATE TABLE `course` (
 --
 
 INSERT INTO `course` (`course_id`, `course_title`, `course_description`, `course_introduction`, `course_content`, `file_path`, `image_path`, `course_image`, `video_link`, `instructor_id`) VALUES
-(5, 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', '', 'https://www.youtube.com/ewrwe', 1),
+(5, 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/react js.jpg', '', 'https://www.youtube.com/ewrwe', 1),
 (6, 'Wireless Mobile Computing 2', 'Wireless Mobile Computing 2', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', '', 'https://www.youtube.com/ewrwe', 1),
 (7, 'React Js', 'This is description', 'This is introduction', 'This is content', './../Course/uploads/pdfs/ReactJS-Guide.pdf', './../Course/uploads/images/react js.jpg', 'react js.jpg', 'https://www.youtube.com/watch?v=w7ejDZ8SWv8', 1);
 
@@ -105,8 +129,8 @@ CREATE TABLE `enroll_students` (
 --
 
 INSERT INTO `enroll_students` (`id`, `student_id`, `course_id`, `course_name`, `instructor_name`, `instructor_id`, `completed`) VALUES
-(21, 4, 5, 'Wireless Mobile Computing', 'Jane Doe', 0, 'No'),
-(22, 4, 6, 'Wireless Mobile Computing 2', 'Jane Doe', 1, 'No'),
+(21, 4, 5, 'Wireless Mobile Computing', 'Jane Doe', 1, 'Yes'),
+(22, 4, 6, 'Wireless Mobile Computing 2', 'Jane Doe', 1, 'Yes'),
 (23, 4, 7, 'React Js', 'Jane Doe', 1, 'Yes');
 
 -- --------------------------------------------------------
@@ -191,25 +215,17 @@ CREATE TABLE `quiz_results` (
   `student_id` int(15) NOT NULL,
   `course_id` int(15) NOT NULL,
   `score` int(15) NOT NULL,
-  `date` datetime(6) DEFAULT NULL,
-  `percent_correct` varchar(255) NOT NULL
+  `date` datetime(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `quiz_results`
 --
 
-INSERT INTO `quiz_results` (`quiz_id`, `student_id`, `course_id`, `score`, `date`, `percent_correct`) VALUES
-(1, 4, 5, 0, NULL, ''),
-(2, 4, 5, 0, '2023-03-17 02:09:38.000000', ''),
-(4, 4, 5, 0, '2023-03-17 02:10:37.000000', ''),
-(5, 4, 5, 0, '2023-03-17 02:11:23.000000', '0'),
-(6, 4, 5, 0, '2023-03-17 02:16:49.000000', '0'),
-(7, 4, 5, 0, '2023-03-17 02:21:25.000000', '0'),
-(8, 4, 5, 0, '2023-03-17 15:28:12.000000', '0'),
-(9, 4, 5, 0, '2023-03-17 15:28:25.000000', '0'),
-(10, 4, 5, 0, '2023-03-17 15:30:35.000000', '0'),
-(11, 4, 5, 0, '2023-03-17 15:36:40.000000', '0');
+INSERT INTO `quiz_results` (`quiz_id`, `student_id`, `course_id`, `score`, `date`) VALUES
+(19, 4, 5, 83, '2023-03-20 11:55:14.000000'),
+(20, 4, 6, 100, '2023-03-19 17:12:39.000000'),
+(21, 4, 5, 83, '2023-03-19 16:52:58.000000');
 
 -- --------------------------------------------------------
 
@@ -238,6 +254,12 @@ INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `password`) VAL
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `achievements`
+--
+ALTER TABLE `achievements`
+  ADD PRIMARY KEY (`arch_id`);
 
 --
 -- Indexes for table `course`
@@ -286,6 +308,12 @@ ALTER TABLE `student`
 --
 
 --
+-- AUTO_INCREMENT for table `achievements`
+--
+ALTER TABLE `achievements`
+  MODIFY `arch_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
@@ -319,7 +347,7 @@ ALTER TABLE `quizzes`
 -- AUTO_INCREMENT for table `quiz_results`
 --
 ALTER TABLE `quiz_results`
-  MODIFY `quiz_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `quiz_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `student`

@@ -350,10 +350,10 @@ mysqli_stmt_close($stmt);
                                 <div class="nav-item py-16pt py-sm-0">
                                     <div class="media flex-nowrap">
                                         <div class="media-left mr-16pt">
-                                            <a href="student-take-course.php"><img src="./../Public/images/paths/angular_64x64.png" width="40" alt="Angular" class="rounded"></a>
+                                            <a href="student-take-lesson.php?id=<?php echo $course_id ?>"><img src="./../Public/images/paths/angular_64x64.png" width="40" alt="Angular" class="rounded"></a>
                                         </div>
                                         <div class="media-body d-flex flex-column">
-                                            <a href="student-take-course.php" class="card-title"><?php echo $course['course_title']; ?></a>
+                                            <a href="student-take-lesson.php?id=<?php echo $course_id ?>" class="card-title"><?php echo $course['course_title']; ?></a>
                                             <div class="d-flex">
                                                 <span class="text-50 small font-weight-bold mr-8pt">By <?php echo $instructor['first_name'] . ' ' . $instructor['last_name']; ?></span>
                                                 <span class="text-50 small">Software Engineer and Developer</span>

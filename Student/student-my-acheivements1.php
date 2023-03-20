@@ -39,7 +39,7 @@ $achievements = get_achievements($conn, $student_id);
     <!-- Prevent the demo from appearing in search engines -->
     <meta name="robots" content="noindex">
 
-    <link href="../../../fonts.googleapis.com/css8f03.css?family=Lato:400,700%7CRoboto:400,500%7CExo+2:600&amp;display=swap" rel="stylesheet">
+    <link href="./Public/Css/css8f03.css?family=Lato:400,700%7CRoboto:400,500%7CExo+2:600&amp;display=swap" rel="stylesheet">
 
     <!-- Preloader -->
     <link type="text/css" href="./../Public/vendor/spinkit.css" rel="stylesheet">
@@ -117,143 +117,11 @@ $achievements = get_achievements($conn, $student_id);
                     <!-- // END Navbar Brand -->
 
 
-                    <!-- Navbar Search -->
-
-                    <form class="search-form navbar-search d-none d-md-flex mr-16pt" action="">
-                        <button class="btn" type="submit"><i class="material-icons">search</i></button>
-                        <input type="text" class="form-control" placeholder="Search ...">
-                    </form>
-
-                    <!-- // END Navbar Search -->
-
                     <div class="flex"></div>
 
                     <!-- Navbar Menu -->
 
                     <div class="nav navbar-nav flex-nowrap d-flex mr-16pt">
-
-                        <!-- Notifications dropdown -->
-                        <div class="nav-item dropdown dropdown-notifications dropdown-xs-down-full" data-toggle="tooltip" data-title="Messages" data-placement="bottom" data-boundary="window">
-                            <button class="nav-link btn-flush dropdown-toggle" type="button" data-toggle="dropdown" data-caret="false">
-                                <i class="material-icons icon-24pt">mail_outline</i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <div data-perfect-scrollbar class="position-relative">
-                                    <div class="dropdown-header"><strong>Messages</strong></div>
-                                    <div class="list-group list-group-flush mb-0">
-
-                                        <a href="javascript:void(0);" class="list-group-item list-group-item-action unread">
-                                            <span class="d-flex align-items-center mb-1">
-                                                <small class="text-black-50">5 minutes ago</small>
-
-                                                <span class="ml-auto unread-indicator bg-accent"></span>
-
-                                            </span>
-                                            <span class="d-flex">
-                                                <span class="avatar avatar-xs mr-2">
-                                                    <img src="./../Public/images/people/110/woman-5.jpg" alt="people" class="avatar-img rounded-circle">
-                                                </span>
-                                                <span class="flex d-flex flex-column">
-                                                    <strong class="text-black-100">Michelle</strong>
-                                                    <span class="text-black-70">Clients loved the new design.</span>
-                                                </span>
-                                            </span>
-                                        </a>
-
-                                        <a href="javascript:void(0);" class="list-group-item list-group-item-action">
-                                            <span class="d-flex align-items-center mb-1">
-                                                <small class="text-black-50">5 minutes ago</small>
-
-                                            </span>
-                                            <span class="d-flex">
-                                                <span class="avatar avatar-xs mr-2">
-                                                    <img src="./../Public/images/people/110/woman-5.jpg" alt="people" class="avatar-img rounded-circle">
-                                                </span>
-                                                <span class="flex d-flex flex-column">
-                                                    <strong class="text-black-100">Michelle</strong>
-                                                    <span class="text-black-70">🔥 Superb job..</span>
-                                                </span>
-                                            </span>
-                                        </a>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- // END Notifications dropdown -->
-
-                        <!-- Notifications dropdown -->
-                        <div class="nav-item ml-16pt dropdown dropdown-notifications dropdown-xs-down-full" data-toggle="tooltip" data-title="Notifications" data-placement="bottom" data-boundary="window">
-                            <button class="nav-link btn-flush dropdown-toggle" type="button" data-toggle="dropdown" data-caret="false">
-                                <i class="material-icons">notifications_none</i>
-                                <span class="badge badge-notifications badge-accent">2</span>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <div data-perfect-scrollbar class="position-relative">
-                                    <div class="dropdown-header"><strong>System notifications</strong></div>
-                                    <div class="list-group list-group-flush mb-0">
-
-                                        <a href="javascript:void(0);" class="list-group-item list-group-item-action unread">
-                                            <span class="d-flex align-items-center mb-1">
-                                                <small class="text-black-50">3 minutes ago</small>
-
-                                                <span class="ml-auto unread-indicator bg-accent"></span>
-
-                                            </span>
-                                            <span class="d-flex">
-                                                <span class="avatar avatar-xs mr-2">
-                                                    <span class="avatar-title rounded-circle bg-light">
-                                                        <i class="material-icons font-size-16pt text-accent">account_circle</i>
-                                                    </span>
-                                                </span>
-                                                <span class="flex d-flex flex-column">
-
-                                                    <span class="text-black-70">Your profile information has not been synced correctly.</span>
-                                                </span>
-                                            </span>
-                                        </a>
-
-                                        <a href="javascript:void(0);" class="list-group-item list-group-item-action">
-                                            <span class="d-flex align-items-center mb-1">
-                                                <small class="text-black-50">5 hours ago</small>
-
-                                            </span>
-                                            <span class="d-flex">
-                                                <span class="avatar avatar-xs mr-2">
-                                                    <span class="avatar-title rounded-circle bg-light">
-                                                        <i class="material-icons font-size-16pt text-primary">group_add</i>
-                                                    </span>
-                                                </span>
-                                                <span class="flex d-flex flex-column">
-                                                    <strong class="text-black-100">Adrian. D</strong>
-                                                    <span class="text-black-70">Wants to join your private group.</span>
-                                                </span>
-                                            </span>
-                                        </a>
-
-                                        <a href="javascript:void(0);" class="list-group-item list-group-item-action">
-                                            <span class="d-flex align-items-center mb-1">
-                                                <small class="text-black-50">1 day ago</small>
-
-                                            </span>
-                                            <span class="d-flex">
-                                                <span class="avatar avatar-xs mr-2">
-                                                    <span class="avatar-title rounded-circle bg-light">
-                                                        <i class="material-icons font-size-16pt text-warning">storage</i>
-                                                    </span>
-                                                </span>
-                                                <span class="flex d-flex flex-column">
-
-                                                    <span class="text-black-70">Your deploy was successful.</span>
-                                                </span>
-                                            </span>
-                                        </a>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- // END Notifications dropdown -->
 
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link d-flex align-items-center dropdown-toggle" data-toggle="dropdown" data-caret="false">
@@ -267,7 +135,7 @@ $achievements = get_achievements($conn, $student_id);
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div class="dropdown-header"><strong>Account</strong></div>
-                                <a class="dropdown-item" href="./edit-account.php">Edit Account</a>
+                                <a class="dropdown-item" href="edit-account.php">Edit Account</a>
                                 <a class="dropdown-item" href="./logout.php">Logout</a>
                             </div>
                         </div>
@@ -314,11 +182,6 @@ $achievements = get_achievements($conn, $student_id);
                                 </div>
                             </div>
 
-                            <div class="row" role="tablist">
-                                <div class="col-auto">
-                                    <a href="./student-my-courses.php" class="btn btn-outline-secondary">My Courses</a>
-                                </div>
-                            </div>
 
                         </div>
                     </div>
@@ -391,12 +254,12 @@ $achievements = get_achievements($conn, $student_id);
                             <p class="text-70 brand mb-24pt">
                                 <img class="brand-icon" src="./../Public/images/logo/black-70%402x.png" width="30" alt="Luma"> Online Classroom
                             </p>
-                            <p class="measure-lead-max text-50 small mr-8pt">Online Classroom is a beautifully crafted user interface for modern Education Platforms, including Courses & Tutorials, Video Lessons, Student and Teacher Dashboard and more.</p>
+                            <p class="measure-lead-max text-50 small mr-8pt">Online Classroom is a beautifully crafted user interface for modern Education Platforms, including Courses & Tutorials, Video Lessons, Student and Teacher Dashboard, Curriculum Management, Earnings and Reporting, ERP, HR, CMS, Tasks, Projects, eCommerce and more.</p>
                             <p class="mb-8pt d-flex">
                                 <a href="#" class="text-70 text-underline mr-8pt small">Terms</a>
                                 <a href="#" class="text-70 text-underline small">Privacy policy</a>
                             </p>
-                            <p class="text-50 small mt-n1 mb-0">Copyright 2023 &copy; All rights reserved.</p>
+                            <p class="text-50 small mt-n1 mb-0">Copyright 2019 &copy; All rights reserved.</p>
                         </div>
                     </div>
 
@@ -405,56 +268,7 @@ $achievements = get_achievements($conn, $student_id);
                 </div>
                 <!-- // END drawer-layout__content -->
 
-                <!-- Drawer -->
 
-                <div class="mdk-drawer js-mdk-drawer" id="default-drawer">
-                    <div class="mdk-drawer__content top-navbar">
-                        <div class="sidebar sidebar-dark-pickled-bluewood sidebar-left sidebar-p-t" data-perfect-scrollbar>
-
-                            <!-- Sidebar Content -->
-
-                            <div class="sidebar-heading">Student</div>
-                            <ul class="sidebar-menu nav nav-tabs">
-
-                                <li class="sidebar-menu-item active">
-                                    <a class="sidebar-menu-button" href="./student-dashboard.php">
-                                        <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">account_box</span>
-                                        <span class="sidebar-menu-text">Dashboard</span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="./student-my-courses.php">
-                                        <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">search</span>
-                                        <span class="sidebar-menu-text">My Courses</span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="./dashboard-my-quizzes.php">
-                                        <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">poll</span>
-                                        <span class="sidebar-menu-text">My Quizzes</span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="./student-my-acheivements.php">
-                                        <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">assignment_turned_in</span>
-                                        <span class="sidebar-menu-text">achievements</span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="./dashboard-track-progress.php">
-                                        <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">timeline</span>
-                                        <span class="sidebar-menu-text">Track Progress</span>
-                                    </a>
-                                </li>
-                            </ul>
-
-                            <!-- // END Sidebar Content -->
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- // END Drawer -->
 
             </div>
             <!-- // END drawer-layout -->
@@ -516,5 +330,6 @@ $achievements = get_achievements($conn, $student_id);
     <!-- App Settings (safe to remove) -->
     <!-- <script src="./../Public/js/app-settings.js"></script> -->
 </body>
+
 
 </html>

@@ -324,10 +324,10 @@ $instructor = mysqli_fetch_assoc($get_instructor_name);
                             <div class="page-section p-3">
                                 <div class="form-group">
                                     <div class="custom-control">';
-                        echo '<input type="radio" name="answer[' . $row['id'] . ']" value="1" class="p-2"><label for="customCheck01" class="p-2">' . $row['option1'] . '</label><br>';
-                        echo '<input type="radio" name="answer[' . $row['id'] . ']" value="2" class="p-2"><label for="customCheck01" class="p-2">' . $row['option2'] . '</label><br>';
-                        echo '<input type="radio" name="answer[' . $row['id'] . ']" value="3" class="p-2"><label for="customCheck01" class="p-2">' . $row['option3'] . '</label><br>';
-                        echo '<input type="radio" name="answer[' . $row['id'] . ']" value="4" class="p-2"><label for="customCheck01" class="p-2">' . $row['option4'] . '</label><br></div></div></div></div>';
+                        echo '<input type="radio" name="answer[' . $row['id'] . ']" value="1" class="p-2" required><label for="customCheck01" class="p-2">' . $row['option1'] . '</label><br>';
+                        echo '<input type="radio" name="answer[' . $row['id'] . ']" value="2" class="p-2" required><label for="customCheck01" class="p-2">' . $row['option2'] . '</label><br>';
+                        echo '<input type="radio" name="answer[' . $row['id'] . ']" value="3" class="p-2" required><label for="customCheck01" class="p-2">' . $row['option3'] . '</label><br>';
+                        echo '<input type="radio" name="answer[' . $row['id'] . ']" value="4" class="p-2" required><label for="customCheck01" class="p-2">' . $row['option4'] . '</label><br></div></div></div></div>';
                         $counter++;
                     }
 
