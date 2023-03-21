@@ -35,16 +35,16 @@ $courses = get_student_courses($student_id);
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
 </head>
 
@@ -288,11 +288,11 @@ $courses = get_student_courses($student_id);
                                     <h2 class="mb-0">Dashboard</h2>
 
                                     <ol class="breadcrumb p-0 m-0">
-                                        <li class="breadcrumb-item"><a href="./../index.php">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="./student-dashboard.php">Dashboard</a></li>
 
                                         <li class="breadcrumb-item active">
 
-                                            Dashboard
+                                            My Courses
 
                                         </li>
 
@@ -465,13 +465,13 @@ $courses = get_student_courses($student_id);
                             <div class="sidebar-heading">Student</div>
                             <ul class="sidebar-menu nav nav-tabs">
 
-                                <li class="sidebar-menu-item active">
+                                <li class="sidebar-menu-item">
                                     <a class="sidebar-menu-button" href="student-dashboard.php">
                                         <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">account_box</span>
                                         <span class="sidebar-menu-text">Dashboard</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-menu-item">
+                                <li class="sidebar-menu-item active">
                                     <a class="sidebar-menu-button" href="#">
                                         <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">search</span>
                                         <span class="sidebar-menu-text">My Courses</span>

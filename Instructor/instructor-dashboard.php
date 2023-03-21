@@ -79,16 +79,16 @@ $course_progress = get_courses_progress();
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
 </head>
 

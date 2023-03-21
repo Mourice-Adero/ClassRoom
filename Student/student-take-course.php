@@ -19,8 +19,8 @@ $course = get_course($course_id);
 
 // fetch the instructor details for the current course
 $instructor_id = $course['instructor_id'];
-$get_instructor_name = mysqli_query($conn, "SELECT first_name, last_name FROM instructor WHERE id = $instructor_id");
-$instructor = mysqli_fetch_assoc($get_instructor_name);
+$get_instructor = mysqli_query($conn, "SELECT * FROM instructor WHERE id = $instructor_id");
+$instructor = mysqli_fetch_assoc($get_instructor);
 
 
 // Query the database to get the course data for the specified ID
@@ -227,16 +227,16 @@ if (isset($_POST["save-course"])) {
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
 </head>
 

@@ -3,8 +3,8 @@
 require_once './../Include/config.php';
 
 // Define variables and initialize with empty values
-$email = $first_name = $last_name =  $password = $confirm_password = "";
-$email_err = $first_name_err = $last_name_err = $password_err = $confirm_password_err = "";
+$email = $first_name = $last_name =  $password = $confirm_password = $gender = $dob = $speciality = "";
+$email_err = $first_name_err = $last_name_err = $password_err = $confirm_password_err = $dob_err = $speciality_err = $gender_err = "";
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -45,28 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST["first_name"]))) {
         $first_name_err = "Please enter first name.";
     } else {
-        // Prepare a select statement
-        $sql = "SELECT id FROM instructor WHERE first_name = ?";
-
-        if ($stmt = $conn->prepare($sql)) {
-            // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("s", $param_first_name);
-
-            // Set parameters
-            $param_first_name = trim($_POST["first_name"]);
-
-            // Attempt to execute the prepared statement
-            if ($stmt->execute()) {
-                // Store result
-                $stmt->store_result();
-                $first_name = trim($_POST["first_name"]);
-            } else {
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-
-            // Close statement
-            $stmt->close();
-        }
+        $first_name = trim($_POST["first_name"]);
     }
 
 
@@ -74,28 +53,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST["last_name"]))) {
         $last_name_err = "Please enter a last name.";
     } else {
-        // Prepare a select statement
-        $sql = "SELECT id FROM instructor WHERE last_name = ?";
+        $last_name = trim($_POST["last_name"]);
+    }
 
-        if ($stmt = $conn->prepare($sql)) {
-            // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("s", $param_last_name);
+    // Validate gender
+    if (empty(trim($_POST["gender"]))) {
+        $gender_err = "Please enter gender.";
+    } else {
+        $gender = trim($_POST["gender"]);
+    }
 
-            // Set parameters
-            $param_last_name = trim($_POST["last_name"]);
+    // Validate speciality
+    if (empty(trim($_POST["speciality"]))) {
+        $speciality_err = "Please enter speciality.";
+    } else {
+        $speciality = trim($_POST["speciality"]);
+    }
 
-            // Attempt to execute the prepared statement
-            if ($stmt->execute()) {
-                // Store result
-                $stmt->store_result();
-                $last_name = trim($_POST["last_name"]);
-            } else {
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-
-            // Close statement
-            $stmt->close();
-        }
+    $now = date('d-m-Y');
+    // Validate dob
+    if (empty(trim($_POST["dob"]))) {
+        $dob_err = "Please enter date of birth.";
+    } elseif(trim($_POST["dob"]) > $now ) {
+        $dob_err = "Choose a valid date!";
+    } else {
+        $dob = trim($_POST["dob"]);
     }
 
     // Validate password
@@ -118,31 +100,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check input errors before inserting in database
-    if (empty($email_err) && empty($first_name_err) && empty($last_name_err) && empty($password_err) && empty($confirm_password_err)) {
+    if (empty($email_err) && empty($first_name_err) && empty($last_name_err) && empty($password_err) && empty($confirm_password_err && empty($gender_err) && empty($speciality_err) && empty($dob_err))) {
 
+        $password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
         // Prepare an insert statement
-        $sql = "INSERT INTO instructor (email, first_name, last_name, password) VALUES (?, ?, ?, ?)";
-
-        if ($stmt = $conn->prepare($sql)) {
-            // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("ssss", $param_email, $param_first_name, $param_last_name, $param_password);
-
-            // Set parameters
-            $param_email = $email;
-            $param_first_name = $first_name;
-            $param_last_name = $last_name;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
-
-            // Attempt to execute the prepared statement
-            if ($stmt->execute()) {
-                // Redirect to login page
-                header("location: login.php");
-            } else {
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-
-            // Close statement
-            $stmt->close();
+        $sql = "INSERT INTO instructor (email, first_name, last_name, password, gender, speciality, dob) VALUES ('$email', '$first_name', '$last_name','$password', '$gender', '$speciality', '$dob')";
+        $exec = mysqli_query($conn, $sql);
+        if ($exec) {
+            header("location: login.php");
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
         }
     }
 
@@ -242,15 +209,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </ul>
 
                     <ul class="nav navbar-nav ml-auto mr-0">
-                            <li class="nav-item">
-                                <a href="./login.php"
-                                   class="nav-link"
-                                   data-toggle="tooltip"
-                                   data-title="Login"
-                                   data-placement="bottom"
-                                   data-boundary="window"><i class="material-icons">lock_open</i></a>
-                            </li>
-                        </ul>
+                        <li class="nav-item">
+                            <a href="./login.php" class="nav-link" data-toggle="tooltip" data-title="Login" data-placement="bottom" data-boundary="window"><i class="material-icons">lock_open</i></a>
+                        </li>
+                    </ul>
                 </div>
 
             </div>
@@ -285,6 +247,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <label class="form-label" for="email">Email:</label>
                                             <input id="email" name="email" type="email" class="form-control" placeholder="Your email address ..." value="<?php echo $email; ?>">
                                             <span class="help-block text-warning"><?php echo $email_err; ?></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="speciality">Speciality:</label>
+                                            <select id="speciality" name="speciality" type="text" class="form-control">
+                                                <option value="Design">Design</option>
+                                                <option value="Security">Security</option>
+                                                <option value="Networking">Networking</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            <span class="help-block text-warning"><?php echo $speciality_err; ?></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="email">Gender:</label>
+                                            <select id="gender" name="gender" type="gender" class="form-control">
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            <span class="help-block text-warning"><?php echo $gender_err ?></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label" for="email">Date of birth:</label>
+                                            <input id="dob" name="dob" type="date" class="form-control" placeholder="Choose date ...">
+                                            <span class="help-block text-warning"><?php echo $dob_err ?></span>
                                         </div>
                                         <div class="form-group mb-24pt">
                                             <label class="form-label" for="password">Password:</label>

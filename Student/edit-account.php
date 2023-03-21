@@ -6,7 +6,7 @@ session_start();
 
 // Redirect to login page if user is not logged in
 if (!isset($_SESSION["student_id"])) {
-    header("location: ./../login.php");
+    header("location: ./login.php");
     exit;
 }
 
@@ -41,7 +41,6 @@ $email_err = $password_err = $confirm_password_err = $first_name_err = $last_nam
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     // Validate email
     if (empty(trim($_POST["email"]))) {
         $email_err = "Please enter an email address.";
@@ -89,61 +88,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $last_name = trim($_POST["last_name"]);
     }
 
-   // Validate password
-if (!empty(trim($_POST["password"]))) {
-    if (strlen(trim($_POST["password"])) < 8) {
-        $password_err = "Password must have at least 8 characters.";
+    // Validate password
+    if (!empty(trim($_POST["password"]))) {
+        if (strlen(trim($_POST["password"])) < 8) {
+            $password_err = "Password must have at least 8 characters.";
+        } else {
+            $password = trim($_POST["password"]);
+        }
     } else {
-        $password = trim($_POST["password"]);
+        $password_err = "Please enter a password.";
     }
-} else {
-    $password_err = "Please enter a password.";
-}
 
-// Validate confirm password
-if (!empty(trim($_POST["confirm_password"]))) {
-    if (empty($password_err) && ($password != trim($_POST["confirm_password"]))) {
-        $confirm_password_err = "Passwords did not match.";
+    // Validate confirm password
+    if (!empty(trim($_POST["confirm_password"]))) {
+        if (empty($password_err) && ($password != trim($_POST["confirm_password"]))) {
+            $confirm_password_err = "Passwords did not match.";
+        }
+    } else {
+        $confirm_password_err = "Please confirm password.";
     }
-} else {
-    $confirm_password_err = "Please confirm password.";
-}
 
-// Check input errors before updating in database
-if (empty($email_err) && empty($password_err) && empty($confirm_password_err) && empty($first_name_err) && empty($last_name_err)) {
-
-    // Prepare an update statement
-    $sql = "UPDATE student SET email = ?, first_name = ?, last_name = ?, password = ? WHERE id = ?";
-
-    if ($stmt = $conn->prepare($sql)) {
-        // Bind variables to the prepared statement as parameters
-        $stmt->bind_param("ssssi", $param_email, $param_first_name, $param_last_name, $param_password, $param_id);
-
-        // Set parameters
-        $param_email = $email;
-        $param_first_name = $first_name;
-        $param_last_name = $last_name;
-        $param_password = !empty($password) ? password_hash($password, PASSWORD_DEFAULT) : $_SESSION["password"];
-        $param_id = $_SESSION["student_id"];
-
-        // Attempt to execute the prepared statement
-        if ($stmt->execute()) {
-            // Password has been changed, destroy all sessions and redirect to login page
-            session_destroy();
-            header("location: login.php");
+    // Check input errors before updating in database
+    if (empty($email_err) && empty($password_err) && empty($confirm_password_err) && empty($first_name_err) && empty($last_name_err)) {
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        // Prepare an update statement
+        $sql = "UPDATE student SET email = '$email', first_name = '$first_name', last_name = '$last_name', password = '$password' WHERE id = '$student_id'";
+        $exec = mysqli_query($conn, $sql);
+        if ($exec) {
+            header("location: ./student-dashboard.php");
             exit();
         } else {
             echo "Oops! Something went wrong. Please try again later.";
         }
-
-        // Close statement
-        $stmt->close();
     }
-}
 
-// Close connection
-mysqli_close($conn);
+    // Close connection
 }
+mysqli_close($conn);
 ?>
 
 
@@ -151,7 +132,7 @@ mysqli_close($conn);
 <html lang="en" dir="ltr">
 
 
- 
+
 
 <head>
     <meta charset="utf-8">
@@ -171,16 +152,16 @@ mysqli_close($conn);
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
 </head>
 
@@ -279,7 +260,7 @@ mysqli_close($conn);
                             <div class="page-separator">
                                 <div class="page-separator__text">Change Password</div>
                             </div>
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="col-sm-5 p-0">
+                            <form method="post" class="col-sm-5 p-0">
                                 <div class="form-group">
                                     <label class="form-label" for="password">Password:</label>
                                     <input id="password" name="password" type="password" class="form-control" placeholder="Type a new password ..." value="<?php echo $password; ?>">
@@ -392,6 +373,6 @@ mysqli_close($conn);
 </body>
 
 
- 
+
 
 </html>

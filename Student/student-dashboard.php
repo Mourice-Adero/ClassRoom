@@ -338,7 +338,7 @@ $achievements = get_achievements($conn, $student_id);
                                     <h2 class="mb-0">Dashboard</h2>
 
                                     <ol class="breadcrumb p-0 m-0">
-                                        <li class="breadcrumb-item"><a href="./../index.php">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="./../index.php">Home Page</a></li>
 
                                         <li class="breadcrumb-item active">
 
@@ -525,6 +525,11 @@ $achievements = get_achievements($conn, $student_id);
                                     <?php
                                     endforeach
                                     ?>
+                                    <?php if (empty($course_progs)) : ?>
+                                        <div class="col-md-12">
+                                            <p>You have not stared any course.</p>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-lg-6">
 
@@ -570,12 +575,17 @@ $achievements = get_achievements($conn, $student_id);
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            
-                                                        </div>                                                    
+
+                                                        </div>
                                                     </div>
                                                 <?php
                                                 endforeach;
                                                 ?>
+                                                <?php if (empty($courses)) : ?>
+                                                    <div class="col-md-12">
+                                                        <p>You have nit started any course.</p>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -666,35 +676,15 @@ $achievements = get_achievements($conn, $student_id);
                                     <?php
                                     endforeach;
                                     ?>
+                                    <?php if (empty($my_quizzes)) : ?>
+                                        <div class="col-md-12">
+                                            <p>You do not have any qizzes.</p>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
 
                             <div class="mb-32pt">
-
-                                <ul class="pagination justify-content-start pagination-xsm m-0">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true" class="material-icons">chevron_left</span>
-                                            <span>Prev</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Page 1">
-                                            <span>1</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Page 2">
-                                            <span>2</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span>Next</span>
-                                            <span aria-hidden="true" class="material-icons">chevron_right</span>
-                                        </a>
-                                    </li>
-                                </ul>
 
                                 <!-- <ul class="pagination justify-content-center pagination-sm">
   <li class="page-item disabled">

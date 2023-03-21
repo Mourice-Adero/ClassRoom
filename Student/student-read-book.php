@@ -19,8 +19,8 @@ $course = get_course($course_id);
 
 // fetch the instructor details for the current course
 $instructor_id = $course['instructor_id'];
-$get_instructor_name = mysqli_query($conn, "SELECT first_name, last_name FROM instructor WHERE id = $instructor_id");
-$instructor = mysqli_fetch_assoc($get_instructor_name);
+$get_instructor = mysqli_query($conn, "SELECT * FROM instructor WHERE id = $instructor_id");
+$instructor = mysqli_fetch_assoc($get_instructor);
 
 
 // Query the database to get the course data for the specified ID
@@ -66,16 +66,16 @@ mysqli_stmt_close($stmt);
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
 </head>
 
@@ -328,7 +328,7 @@ mysqli_stmt_close($stmt);
                                             <a href="student-take-course.php" class="card-title"><?php echo $course['course_title']; ?></a>
                                             <div class="d-flex">
                                                 <span class="text-50 small font-weight-bold mr-8pt">By <?php echo $instructor['first_name'] . ' ' . $instructor['last_name']; ?></span>
-                                                <span class="text-50 small">Software Engineer and Developer</span>
+                                                <span class="text-50 small"><?php echo $instructor['speciality']; ?></span>
                                             </div>
                                         </div>
                                     </div>

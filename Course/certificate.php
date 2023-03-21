@@ -57,32 +57,32 @@
 
         <!-- Preloader -->
         <link type="text/css"
-              href="../../public/vendor/spinkit.css"
+              href="../../Public/vendor/spinkit.css"
               rel="stylesheet">
 
         <!-- Perfect Scrollbar -->
         <link type="text/css"
-              href="../../public/vendor/perfect-scrollbar.css"
+              href="../../Public/vendor/perfect-scrollbar.css"
               rel="stylesheet">
 
         <!-- Material Design Icons -->
         <link type="text/css"
-              href="../../public/css/material-icons.css"
+              href="../../Public/Css/material-icons.css"
               rel="stylesheet">
 
         <!-- Font Awesome Icons -->
         <link type="text/css"
-              href="../../public/css/fontawesome.css"
+              href="../../Public/Css/fontawesome.css"
               rel="stylesheet">
 
         <!-- Preloader -->
         <link type="text/css"
-              href="../../public/css/preloader.css"
+              href="../../Public/Css/preloader.css"
               rel="stylesheet">
 
         <!-- App CSS -->
         <link type="text/css"
-              href="../../public/css/app.css"
+              href="../../Public/Css/app.css"
               rel="stylesheet">
 
     </head>
@@ -134,7 +134,7 @@
 
                             <span class="avatar avatar-sm navbar-brand-icon mr-0 mr-lg-8pt">
 
-                                <span class="avatar-title rounded bg-primary"><img src="../../public/images/illustration/student/128/white.svg"
+                                <span class="avatar-title rounded bg-primary"><img src="../../Public/images/illustration/student/128/white.svg"
                                          alt="logo"
                                          class="img-fluid" /></span>
 
@@ -246,29 +246,29 @@
         <!-- // END Header Layout -->
 
         <!-- jQuery -->
-        <script src="../../public/vendor/jquery.min.js"></script>
+        <script src="../../Public/vendor/jquery.min.js"></script>
 
         <!-- Bootstrap -->
-        <script src="../../public/vendor/popper.min.js"></script>
-        <script src="../../public/vendor/bootstrap.min.js"></script>
+        <script src="../../Public/vendor/popper.min.js"></script>
+        <script src="../../Public/vendor/bootstrap.min.js"></script>
 
         <!-- Perfect Scrollbar -->
-        <script src="../../public/vendor/perfect-scrollbar.min.js"></script>
+        <script src="../../Public/vendor/perfect-scrollbar.min.js"></script>
 
         <!-- DOM Factory -->
-        <script src="../../public/vendor/dom-factory.js"></script>
+        <script src="../../Public/vendor/dom-factory.js"></script>
 
         <!-- MDK -->
-        <script src="../../public/vendor/material-design-kit.js"></script>
+        <script src="../../Public/vendor/material-design-kit.js"></script>
 
         <!-- App JS -->
-        <script src="../../public/js/app.js"></script>
+        <script src="../../Public/js/app.js"></script>
 
         <!-- Preloader -->
-        <script src="../../public/js/preloader.js"></script>
+        <script src="../../Public/js/preloader.js"></script>
 
         <!-- App Settings (safe to remove) -->
-        <!-- <script src="../../public/js/app-settings.js"></script> -->
+        <!-- <script src="../../Public/js/app-settings.js"></script> -->
     </body>
 
 </html>

@@ -70,22 +70,22 @@ $course_title = $row['course_title'];
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
     <!-- Quill Theme -->
-    <link type="text/css" href="./../Public/css/quill.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/quill.css" rel="stylesheet">
     <!-- Select2 -->
     <link type="text/css" href="./../Public/vendor/select2/select2.min.css" rel="stylesheet">
-    <link type="text/css" href="./../Public/css/select2.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/select2.css" rel="stylesheet">
 
 </head>
 

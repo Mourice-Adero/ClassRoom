@@ -6,12 +6,37 @@ session_start();
 
 // Redirect to login page if user is not logged in
 if (!isset($_SESSION["admin_id"])) {
-    header("location: ./../login.php");
+    header("location: ./login.php");
     exit;
 }
 
+// Get the logged-in user's id
+$student_id = $_GET['id'];
+
+// Replace with your SQL query to retrieve the data from the student table
+$sql = "SELECT * FROM student WHERE id = ?";
+
+// Prepare the SQL query
+$stmt = $conn->prepare($sql);
+
+// Bind parameters to the prepared statement
+$stmt->bind_param("i", $student_id);
+
+// Execute the prepared statement
+$stmt->execute();
+
+// Fetch the result
+$result = $stmt->get_result();
+
+// Fetch the row
+$row = $result->fetch_assoc();
+
+$email = $row["email"];
+$first_name = $row["first_name"];
+$last_name = $row["last_name"];
+
 // Define variables and initialize with empty values
-$email = $password = $confirm_password = $first_name = $last_name= "";
+$password = $confirm_password = "";
 $email_err = $password_err = $confirm_password_err = $first_name_err = $last_name_err = "";
 
 // Processing form data when form is submitted
@@ -25,11 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt = $conn->prepare($sql)) {
             // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("si", $param_email, $param_id);
+            $stmt->bind_param("si", $param_email, $student_id);
 
             // Set parameters
             $param_email = trim($_POST["email"]);
-            $param_id = $_SESSION["admin_id"];
 
             // Attempt to execute the prepared statement
             if ($stmt->execute()) {
@@ -50,64 +74,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    // Validate first_name
+    if (empty(trim($_POST["first_name"]))) {
+        $first_name_err = "Please enter first name.";
+    } else {
+        $first_name = trim($_POST["first_name"]);
+    }
 
-        // Validate first_name
-        if (empty(trim($_POST["first_name"]))) {
-            $first_name_err = "Please enter first name.";
-        } else {
-            // Prepare a select statement
-            $sql = "SELECT id FROM admin WHERE first_name = ? AND id != ?";
-    
-            if ($stmt = $conn->prepare($sql)) {
-                // Bind variables to the prepared statement as parameters
-                $stmt->bind_param("si", $param_first_name, $param_id);
-    
-                // Set parameters
-                $param_first_name = trim($_POST["first_name"]);
-    
-                // Attempt to execute the prepared statement
-                if ($stmt->execute()) {
-                    // Store result
-                    $stmt->store_result();
-                    $first_name = trim($_POST["first_name"]);
-                } else {
-                    echo "Oops! Something went wrong. Please try again later.";
-                }
-    
-                // Close statement
-                $stmt->close();
-            }
-        }
-    
-    
-        // Validate last_name
-        if (empty(trim($_POST["last_name"]))) {
-            $last_name_err = "Please enter a last name.";
-        } else {
-            // Prepare a select statement
-            $sql = "SELECT id FROM admin WHERE last_name = ? AND id != ?";
-    
-            if ($stmt = $conn->prepare($sql)) {
-                // Bind variables to the prepared statement as parameters
-                $stmt->bind_param("si", $param_last_name, $param_id);
-    
-                // Set parameters
-                $param_last_name = trim($_POST["last_name"]);
-    
-                // Attempt to execute the prepared statement
-                if ($stmt->execute()) {
-                    // Store result
-                    $stmt->store_result();
-                    $last_name = trim($_POST["last_name"]);
-                } else {
-                    echo "Oops! Something went wrong. Please try again later.";
-                }
-    
-                // Close statement
-                $stmt->close();
-            }
-        }
-    
+    // Validate last_name
+    if (empty(trim($_POST["last_name"]))) {
+        $last_name_err = "Please enter a last name.";
+    } else {
+        $last_name = trim($_POST["last_name"]);
+    }
+
     // Validate password
     if (!empty(trim($_POST["password"]))) {
         if (strlen(trim($_POST["password"])) < 8) {
@@ -125,50 +105,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $confirm_password_err = "Passwords did not match.";
         }
     } else {
-        $confirm_password_err = "Please enter a password.";
+        $confirm_password_err = "Please confirm password.";
     }
 
     // Check input errors before updating in database
-    if (empty($email_err) && empty($password_err) && empty($confirm_password_err)) {
+    if (empty($email_err) && empty($password_err) && empty($confirm_password_err) && empty($first_name_err) && empty($last_name_err)) {
+        $password = password_hash($password, PASSWORD_DEFAULT);
         // Prepare an update statement
-        $sql = "UPDATE student SET email = ?, first_name = ?, last_name = ?, password = ? WHERE id = ?";
-
-        if ($stmt = $conn->prepare($sql)) {
-            // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("ssssi", $param_email, $param_first_name, $param_last_name, $param_password, $param_id);
-
-            // Set parameters
-            $param_email = $email;
-            $param_first_name = $first_name;
-            $param_last_name = $last_name;
-            $param_password = !empty($password) ? password_hash($password, PASSWORD_DEFAULT) : $_SESSION["password"];
-            $param_id = $_SESSION["admin_id"];
-
-            // Attempt to execute the prepared statement
-            if ($stmt->execute()) {
-                // Update session variables
-                $_SESSION["email"] = $email;
-                $_SESSION["password"] = $param_password;
-                echo "<script>alert('Details Updated Successfully!')</script>";
-                // Redirect to login page
-                header("location: ./student-dashboard.php");
-            } else {
-                echo "<script>alert('Oops! Something went wrong. Please try again later.')</script>";
-            }
-
-            // Close statement
-            $stmt->close();
+        $sql = "UPDATE student SET email = '$email', first_name = '$first_name', last_name = '$last_name', password = '$password' WHERE id = '$student_id'";
+        $exec = mysqli_query($conn, $sql);
+        if ($exec) {
+            header("location: ./admin-manage-student.php");
+            exit();
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
         }
     }
 
     // Close connection
-    $conn->close();
 }
+mysqli_close($conn);
 ?>
 
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 
 
 
@@ -190,16 +152,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
 </head>
 
@@ -257,10 +219,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <ul class="nav navbar-nav ml-auto mr-0">
                         <li class="nav-item">
-                            <a href="./../login.php" class="nav-link" data-toggle="tooltip" data-title="Login" data-placement="bottom" data-boundary="window"><i class="material-icons">lock_open</i></a>
+                            <a href="./login.php" class="nav-link" data-toggle="tooltip" data-title="Login" data-placement="bottom" data-boundary="window"><i class="material-icons">lock_open</i></a>
                         </li>
                         <li class="nav-item">
-                            <a href="./../signup.php" class="btn btn-outline-dark">Get Started</a>
+                            <a href="./signup.php" class="btn btn-outline-dark">Get Started</a>
                         </li>
                     </ul>
                 </div>
@@ -298,14 +260,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="page-separator">
                                 <div class="page-separator__text">Change Password</div>
                             </div>
-                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="col-sm-5 p-0">
+                            <form method="post" class="col-sm-5 p-0">
                                 <div class="form-group">
                                     <label class="form-label" for="password">Password:</label>
                                     <input id="password" name="password" type="password" class="form-control" placeholder="Type a new password ..." value="<?php echo $password; ?>">
                                     <span class="help-block text-warning"><?php echo $password_err; ?></span>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label" for="confirm_password">Confirm Password:</label>
+                                    <label class="form-label" for="password2">Confirm Password:</label>
                                     <input id="confirm_password" name="confirm_password" type="password" class="form-control" placeholder="Confirm your new password ..." value="<?php echo $confirm_password; ?>">
                                     <span class="help-block text-warning"><?php echo $confirm_password_err; ?></span>
                                 </div>
@@ -318,16 +280,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="page-separator">
                                 <div class="page-separator__text">Change Name</div>
                             </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="first_name">First Name:</label>
-                                    <input id="first_name" name="first_name" type="text" class="form-control" placeholder="Type a name ..." value="<?php echo $first_name; ?>">
-                                    <span class="help-block text-warning"><?php echo $first_name_err; ?></span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="last_name">Last Name:</label>
-                                    <input id="last_name" name="last_name" type="text" class="form-control" placeholder="Confirm your name ..." value="<?php echo $last_name; ?>">
-                                    <span class="help-block text-warning"><?php echo $last_name_err; ?></span>
-                                </div>
+                            <div class="form-group">
+                                <label class="form-label" for="password">First Name:</label>
+                                <input id="first_name" name="first_name" type="text" class="form-control" placeholder="Type a first name ..." value="<?php echo $first_name; ?>">
+                                <span class="help-block text-warning"><?php echo $first_name_err; ?></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="password2">Last Name:</label>
+                                <input id="last_name" name="last_name" type="text" class="form-control" placeholder="Type a last name ..." value="<?php echo $last_name; ?>">
+                                <span class="help-block text-warning"><?php echo $last_name_err; ?></span>
+                            </div>
 
 
                         </div>
@@ -411,6 +373,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 
 
- 
+
 
 </html>

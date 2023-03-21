@@ -47,16 +47,16 @@ $course_progs = get_course_progress($student_id);
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
 </head>
 
@@ -300,11 +300,11 @@ $course_progs = get_course_progress($student_id);
                                     <h2 class="mb-0">Dashboard</h2>
 
                                     <ol class="breadcrumb p-0 m-0">
-                                        <li class="breadcrumb-item"><a href="./../index.php">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="./student-dashboard.php">Dashboard</a></li>
 
                                         <li class="breadcrumb-item active">
 
-                                            Dashboard
+                                            Track Progress
 
                                         </li>
 
@@ -329,9 +329,6 @@ $course_progs = get_course_progress($student_id);
                             </div>
                             <div id="track-progress">
                                 <div class="col-lg-6 mb-8pt mb-sm-0">
-                                    <div class="page-separator">
-                                        <div class="page-separator__text">Track Progress</div>
-                                    </div>
                                     <?php
                                     foreach ($course_progs as $course_prog) :
                                         $course_id = $course_prog['course_id'];
@@ -346,7 +343,7 @@ $course_progs = get_course_progress($student_id);
                                                         <div class="d-flex align-items-center">
                                                             <div class="rounded mr-12pt z-0 o-hidden">
                                                                 <div class="overlay">
-                                                                    <img src="<?php echo $course['image_path']?>" width="40" height="40" alt="Angular" class="rounded">
+                                                                    <img src="<?php echo $course['image_path'] ?>" width="40" height="40" alt="Angular" class="rounded">
                                                                     <span class="overlay__content overlay__content-transparent">
                                                                         <span class="overlay__action d-flex flex-column text-center lh-1">
                                                                             <small class="h6 small text-white mb-0" style="font-weight: 500;">80%</small>
@@ -355,13 +352,13 @@ $course_progs = get_course_progress($student_id);
                                                                 </div>
                                                             </div>
                                                             <div class="flex">
-                                                                <div class="card-title"><?php echo $course['course_title'];?></div>
+                                                                <div class="card-title"><?php echo $course['course_title']; ?></div>
                                                                 <p class="flex text-50 lh-1 mb-0"><small>18 courses</small></p>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <a href="student-take-lesson.php?id=<?php echo $course['course_id']?>" class="ml-4pt btn btn-sm btn-link text-secondary">Resume</a>
+                                                    <a href="student-take-lesson.php?id=<?php echo $course['course_id'] ?>" class="ml-4pt btn btn-sm btn-link text-secondary">Resume</a>
 
                                                 </div>
 
@@ -413,6 +410,11 @@ $course_progs = get_course_progress($student_id);
                                     <?php
                                     endforeach
                                     ?>
+                                    <?php if (empty($course_progs)) : ?>
+                                        <div class="col-md-12">
+                                            <p>No courses found.</p>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -450,7 +452,7 @@ $course_progs = get_course_progress($student_id);
                             <div class="sidebar-heading">Student</div>
                             <ul class="sidebar-menu nav nav-tabs">
 
-                                <li class="sidebar-menu-item active">
+                                <li class="sidebar-menu-item">
                                     <a class="sidebar-menu-button" href="student-dashboard.php">
                                         <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">account_box</span>
                                         <span class="sidebar-menu-text">Dashboard</span>
@@ -474,7 +476,7 @@ $course_progs = get_course_progress($student_id);
                                         <span class="sidebar-menu-text">achievements</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-menu-item">
+                                <li class="sidebar-menu-item active">
                                     <a class="sidebar-menu-button" href="dashboard-track-progress.php">
                                         <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">timeline</span>
                                         <span class="sidebar-menu-text">Track Progress</span>

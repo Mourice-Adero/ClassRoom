@@ -25,8 +25,8 @@ if (!$result) {
 $course = get_course($course_id);
 // fetch the instructor details for the current course
 $instructor_id = $course['instructor_id'];
-$get_instructor_name = mysqli_query($conn, "SELECT first_name, last_name FROM instructor WHERE id = $instructor_id");
-$instructor = mysqli_fetch_assoc($get_instructor_name);
+$get_instructor = mysqli_query($conn, "SELECT * FROM instructor WHERE id = $instructor_id");
+$instructor = mysqli_fetch_assoc($get_instructor);
 
 if (isset($_POST['submit_answers'])) {
     // Retrieve the course ID from the session
@@ -59,7 +59,7 @@ if (isset($_POST['submit_answers'])) {
         }
 
         // Calculate the student's score as a percentage
-        $score = round(($total_correct / $total_questions) * 100);
+        $score = number_format(($total_correct / $total_questions) * 100, 0);
 
         // Insert the quiz results into the quiz_results table
         $student_id = $_SESSION['student_id'];
@@ -69,7 +69,7 @@ if (isset($_POST['submit_answers'])) {
         $get_prev_archeivement = mysqli_query($conn, "SELECT arch_id, number FROM achievements WHERE student_id = '$student_id' AND course_id = '$course_id' ");
         $prev_archeivement = mysqli_fetch_assoc($get_prev_archeivement);
         // process acheivement
-        if ($score = 100) {
+        if ($score == 100) {
             $submitted_at = date('Y-m-d H:i:s');
             if ($prev_archeivement) {
                 $arch_number = $prev_archeivement['number'];
@@ -109,30 +109,13 @@ if (isset($_POST['submit_answers'])) {
         }
 
         // Calculate the student's score as a percentage
-        $score = round(($total_correct / $total_questions) * 100);
+        $score = number_format(($total_correct / $total_questions) * 100, 0);
 
         // Insert the quiz results into the quiz_results table
         $student_id = $_SESSION['student_id'];
         $submitted_at = date('Y-m-d H:i:s');
         $sql = "INSERT INTO quiz_results (student_id, course_id, score, date) VALUES ('$student_id', '$course_id', '$score', '$submitted_at')";
         $result = mysqli_query($conn, $sql);
-
-        // process acheivement
-        if ($prev_archeivement) {
-            $arch_number = $prev_archeivement['number'];
-            $arch_id = $prev_archeivement['arch_id'];
-            $arch_number = $arch_number + 1;
-            $sql = "UPDATE achievements SET score = '$score', date = '$submitted_at', number = '$arch_number' WHERE arch_id = '$arch_id'";
-            $result = mysqli_query($conn, $sql);
-            $sql2 = "UPDATE enroll_students SET completed = 'Yes' WHERE student_id = '$student_id' AND course_id = '$course_id'";
-            $result2 = mysqli_query($conn, $sql2);
-        } else {
-            $sql = "INSERT INTO achievements (score, date, number, student_id, course_id) VALUES ('$score', '$submitted_at', '1', '$student_id', '$course_id')";
-            $result = mysqli_query($conn, $sql);
-            $sql2 = "UPDATE enroll_students SET completed = 'Yes' WHERE student_id = '$student_id' AND course_id = '$course_id'";
-            $result2 = mysqli_query($conn, $sql2);
-        }
-
         if (!$result) {
             die('Error inserting quiz results: ' . mysqli_error($conn));
         }
@@ -166,16 +149,16 @@ if (isset($_POST['submit_answers'])) {
     <link type="text/css" href="./../Public/vendor/perfect-scrollbar.css" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="./../Public/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/material-icons.css" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="./../Public/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/fontawesome.css" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="./../Public/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/preloader.css" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="./../Public/css/app.css" rel="stylesheet">
+    <link type="text/css" href="./../Public/Css/app.css" rel="stylesheet">
 
 </head>
 
@@ -428,7 +411,7 @@ if (isset($_POST['submit_answers'])) {
                                             <a href="student-take-lesson.php?id=<?php echo $course_id ?>" class="card-title text-body mb-0"><?php echo $course['course_title'] ?></a>
                                             <p class="lh-1 d-flex align-items-center mb-0">
                                                 <span class="text-50 small font-weight-bold mr-8pt"><?php echo $instructor['first_name'] . ' ' . $instructor['last_name']; ?></span>
-                                                <span class="text-50 small">Software Engineer and Developer</span>
+                                                <span class="text-50 small"><?php echo $instructor['speciality']; ?></span>
                                             </p>
                                         </div>
                                     </div>
@@ -445,22 +428,12 @@ if (isset($_POST['submit_answers'])) {
                                         <?php
                                         echo '<p>You answered ' . $total_correct . ' out of ' . $total_questions . ' questions correctly (' . $score . '%).</p>'; ?>
                                     </h1>
-                                    <a href="student-take-quiz.php?id=<?php echo $course_id; ?>" class="btn btn-outline-white">Restart quiz</a>
+                                    <a href="student-take-quiz.php?id=<?php echo $course_id; ?>" class="btn btn-outline-white">Restart quiz</a> <br>
                                     <?php
                                     if ($score == 100) {
-                                        $sql = "SELECT * FROM achievements WHERE course_id = '$course_id' and student_id = '$student_id'";
-                                        $result = mysqli_query($conn, $sql);
-                                        if ($result) {
-                                            $row = mysqli_fetch_assoc($result);
-                                            $all_acheivements = $row['number'];
-                                            $arch_id = $row['arch_id'];
-                                            echo "<p class='p-2 text-white'>Congratulations! You have added one more acheivement to this course.</p>";
-                                        } else {
-                                            echo "<p class='p-2 text-white'>Congratulations! You have received 1 more acheivement in this course.</p>";
-                                        }
+                                        echo "<p class='p-2 text-white'>Congratulations! You have received +1 acheivement in this course.</p>";
                                     }
-                                    echo "<p class='p-2 text-white'>You have " . $all_acheivements . " acheivement(s)</p>";
-                                    echo '<a href="student-my-acheivements.php?id=' . $arch_id . '" class="btn btn-outline-white">See Achievements</a>';
+                                    echo '<a href="student-my-acheivements.php" class="btn btn-outline-white">See Achievements</a>';
                                     ?>
                                 </div>
                             </div>

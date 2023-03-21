@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2023 at 11:59 AM
+-- Generation Time: Mar 21, 2023 at 06:24 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -43,7 +43,9 @@ CREATE TABLE `achievements` (
 INSERT INTO `achievements` (`arch_id`, `student_id`, `course_id`, `date`, `number`, `score`) VALUES
 (3, 4, 6, '2023-03-19 17:12:39.000000', 4, 100),
 (4, 4, 5, '2023-03-20 11:55:14.000000', 8, 100),
-(5, 4, 5, '2023-03-19 16:52:58.000000', 1, 83);
+(5, 4, 5, '2023-03-19 16:52:58.000000', 1, 83),
+(6, 8, 5, '2023-03-21 17:39:21.000000', 2, 100),
+(7, 8, 7, '2023-03-21 18:22:20.000000', 2, 100);
 
 -- --------------------------------------------------------
 
@@ -65,7 +67,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `first_name`, `last_name`, `email`, `password`, `profile_pic`) VALUES
-(0, 'Garey', 'Smith', 'gareysmith1@gmail.com', '$2y$10$UWeNONa2sI/2KAMqlokkwe5TMhCV.81q0MLn9KhdUzhSWiaPxJDja', '');
+(0, 'Garey', 'Smith', 'gareysmith1@gmail.com', 'Garey123', '');
 
 -- --------------------------------------------------------
 
@@ -92,7 +94,7 @@ CREATE TABLE `course` (
 
 INSERT INTO `course` (`course_id`, `course_title`, `course_description`, `course_introduction`, `course_content`, `file_path`, `image_path`, `course_image`, `video_link`, `instructor_id`) VALUES
 (5, 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/react js.jpg', '', 'https://www.youtube.com/ewrwe', 1),
-(6, 'Wireless Mobile Computing 2', 'Wireless Mobile Computing 2', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', '', 'https://www.youtube.com/ewrwe', 1),
+(6, 'Wireless Mobile Computing 2', 'Wireless Mobile Computing 2', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', 'dm1.jpg', 'https://www.youtube.com/ewrwe', 1),
 (7, 'React Js', 'This is description', 'This is introduction', 'This is content', './../Course/uploads/pdfs/ReactJS-Guide.pdf', './../Course/uploads/images/react js.jpg', 'react js.jpg', 'https://www.youtube.com/watch?v=w7ejDZ8SWv8', 1);
 
 -- --------------------------------------------------------
@@ -131,7 +133,9 @@ CREATE TABLE `enroll_students` (
 INSERT INTO `enroll_students` (`id`, `student_id`, `course_id`, `course_name`, `instructor_name`, `instructor_id`, `completed`) VALUES
 (21, 4, 5, 'Wireless Mobile Computing', 'Jane Doe', 1, 'Yes'),
 (22, 4, 6, 'Wireless Mobile Computing 2', 'Jane Doe', 1, 'Yes'),
-(23, 4, 7, 'React Js', 'Jane Doe', 1, 'Yes');
+(23, 4, 7, 'React Js', 'Jane Doe', 1, 'Yes'),
+(24, 8, 5, 'Wireless Mobile Computing', 'Jane Doe', 1, 'Yes'),
+(25, 8, 7, 'React Js', 'Jane Doe', 1, 'Yes');
 
 -- --------------------------------------------------------
 
@@ -144,16 +148,20 @@ CREATE TABLE `instructor` (
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `gender` varchar(15) NOT NULL,
+  `speciality` varchar(255) NOT NULL,
+  `dob` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `instructor`
 --
 
-INSERT INTO `instructor` (`id`, `first_name`, `last_name`, `email`, `password`) VALUES
-(1, 'Jane', 'Doe', 'janedoe@gmail.com', '$2y$10$1yvCFuEcMStOMvuzzaswhum297JGp1dCowOfkSCmKqbvG.Oa6D6JS'),
-(2, 'Mark', 'Newman', 'marknewman@gmail.com', '$2y$10$StLPrLIbanb7UBfn8SgYm.mtmD9k7aU10ybyb.xPaOVjxJfU4mYDa');
+INSERT INTO `instructor` (`id`, `first_name`, `last_name`, `email`, `password`, `gender`, `speciality`, `dob`) VALUES
+(1, 'Jane', 'Doe', 'janedoe@gmail.com', '$2y$10$qK.ZV6KkMQWgpetfRsZ.n.KCVA3GrwDr3Zpf/Z0tWC9h9wKL4saX6', '', 'Programmer', NULL),
+(2, 'Mark', 'Newman', 'marknewman@gmail.com', '$2y$10$StLPrLIbanb7UBfn8SgYm.mtmD9k7aU10ybyb.xPaOVjxJfU4mYDa', '', '', NULL),
+(9, 'Mourice', 'Add', 'add@gmail.com', '$2y$10$L68SP1cOgvZRndE9RGKXUuV7UMHqpRP5YFbE.zNpAdgpbEukf/RyK', 'Male', 'Designer', '1978-08-10');
 
 -- --------------------------------------------------------
 
@@ -177,32 +185,9 @@ CREATE TABLE `quizzes` (
 --
 
 INSERT INTO `quizzes` (`id`, `course_id`, `question`, `option1`, `option2`, `option3`, `option4`, `answer`) VALUES
-(1, 0, 'What is AI', '1', '2', '3', '4', '4'),
-(2, 0, 'KNLN', 'WEQW1', '12', 'E12', 'dqw', '3'),
-(3, 0, 'casa', 'dqq', 'dwq', 'kn', 'lnlk', '2'),
-(4, 0, 'dqw', ';d;', 'nk', 'knn', 'ss', '2'),
-(5, 0, 'dqw', ';d;', 'nk', 'knn', 'ss', '2'),
-(6, 0, 'dq', 'dq', 'dd', 'dq', 'dwq', '3'),
-(7, 0, 'DdD', 'Dda', 'SS', 'FEF', 'kooo', '3'),
-(8, 0, 'DdD', 'Dda', 'SS', 'FEF', 'kooo', '3'),
-(9, 0, 'oweofwh', 'oo', 'oojoo', 'oji', 'njnjnj', '2'),
-(10, 0, 'oweofwh', 'oo', 'oojoo', 'oji', 'njnjnj', '2'),
-(11, 0, 'oono', 'kk', 'nkn', 'kknk', 'knknk', '1'),
-(12, 0, 'oono', 'kk', 'nkn', 'kknk', 'knknk', '1'),
-(13, 0, 'oono', 'kk', 'nkn', 'kknk', 'knknk', '1'),
-(14, 0, 'ojolll', ';;;;m', 'knkk', 'knk', '124edqw', '4'),
-(15, 5, 'New question', ';;;;m', 'knkk', 'None of the above', '124edqw', '4'),
-(16, 0, 'DdD', 'Dda', 'SS', 'FEF', 'kooo', '3'),
-(17, 0, 'DdD', 'Dda', 'SS', 'FEF', 'kooo', '3'),
-(18, 0, 'DdD', 'Dda', 'SS', 'FEF', 'kooo', '3'),
-(20, 5, 'llm', 'pppp', '[oppom', 'kiooi', 'oioo', '2'),
-(21, 5, 'llm', 'pppp', '[oppom', 'kiooi', 'oioo', '2'),
-(22, 5, 'kmkmk', 'dasda', 'liiojoijo', 'kjnnk', 'jnjas', '2'),
-(23, 0, 'java', 'jja', 'ldl', 'jioj', 'ljl', '3'),
-(24, 5, 'React', 'react', 'no', 'tykk', 'njn', '1'),
-(25, 5, 'What is wireless mobile Coo=mputing', 'Is a mobile service', 'Is wireless mobile communication', 'None', 'All', '2'),
-(27, 6, 'Mobile 2', 'yes', 'no', 'none ', 'all', '1'),
-(28, 6, 'What is wired BTS', 'BTS', 'Base Transceiver Station', 'bst', 'All', '4');
+(29, 7, 'Which is false about React', 'React', 'Uses javascript', 'is java', 'React Js', '3'),
+(30, 7, 'Define react', 'Is js framework', 'For frontend apps', 'Uses componets', 'All', '4'),
+(31, 7, 'Which one is correct', 'React is a pythin framework', 'React uses R language', 'React is a server language', 'React is component based', '4');
 
 -- --------------------------------------------------------
 
@@ -225,7 +210,7 @@ CREATE TABLE `quiz_results` (
 INSERT INTO `quiz_results` (`quiz_id`, `student_id`, `course_id`, `score`, `date`) VALUES
 (19, 4, 5, 83, '2023-03-20 11:55:14.000000'),
 (20, 4, 6, 100, '2023-03-19 17:12:39.000000'),
-(21, 4, 5, 83, '2023-03-19 16:52:58.000000');
+(31, 8, 7, 100, '2023-03-21 18:22:20.000000');
 
 -- --------------------------------------------------------
 
@@ -246,10 +231,11 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`id`, `first_name`, `last_name`, `email`, `password`) VALUES
-(4, 'John', 'Doe', 'johndoe@gmail.com', '$2y$10$E45TdKaeHyrjO1L7gr2GDu7S9N5wsspBEcoYZ0QoswRC3dCVnJ0u6'),
+(4, 'John', 'Doe', 'johndoe@gmail.com', '$2y$10$wJK8ihRJlDp40pgptRMrze3jcqRnPPzlT25ECd3PCBQ.qIuhOUmbC'),
 (5, 'faith', 'matara', 'matara@gmail.com', '$2y$10$W.s1UZ4ScG6H6I.MJfzkReHW9lNUVwIxrBiAuLqt5wFXAtdo24tHG'),
-(6, '!£$%', 'fddf', 'ma@gmail.com', '$2y$10$Ts8VcOJidOnOAx9VBO49AOk75k1.u8cm/IYW.P9zZQiaOigTxUzqq'),
-(7, 'john', 'doe', 'mata@gmail.com', '$2y$10$Z6Tj4Zl0whappSfgH4WV0uL9s7ZvkzujwApFO7l6Derh5w6E1wmg6');
+(6, 'New', 'Student', 'newstudent@gmail.com', 'newstudent123'),
+(7, 'john', 'doe', 'mata@gmail.com', '$2y$10$Z6Tj4Zl0whappSfgH4WV0uL9s7ZvkzujwApFO7l6Derh5w6E1wmg6'),
+(8, 'Shem', 'Yuksel', 'shem@gmail.com', '$2y$10$KVzjzVJn87Oi4O4Hp0B5Fuchi8xTSoofm.iMMrkSiP2HcGydQDV2G');
 
 --
 -- Indexes for dumped tables
@@ -311,7 +297,7 @@ ALTER TABLE `student`
 -- AUTO_INCREMENT for table `achievements`
 --
 ALTER TABLE `achievements`
-  MODIFY `arch_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `arch_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `course`
@@ -329,31 +315,31 @@ ALTER TABLE `course_sections`
 -- AUTO_INCREMENT for table `enroll_students`
 --
 ALTER TABLE `enroll_students`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `instructor`
 --
 ALTER TABLE `instructor`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `quizzes`
 --
 ALTER TABLE `quizzes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `quiz_results`
 --
 ALTER TABLE `quiz_results`
-  MODIFY `quiz_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `quiz_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
