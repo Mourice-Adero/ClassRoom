@@ -1,5 +1,4 @@
 <?php
-
 include "./../Include/config.php";
 // Initialize the session
 session_start();
@@ -9,10 +8,26 @@ if (!isset($_SESSION["admin_id"])) {
     header("location: ./login.php");
     exit;
 }
+
+if (isset($_POST['approve'])) {
+    $feedback_id = $_POST['feedback_id'];
+    $exec = mysqli_query($conn, "UPDATE feedback SET status = 'approved' WHERE feedback_id = '$feedback_id'");
+    if ($exec) {
+        echo "<script>alert('Approved!')</script>";
+    }
+}
+if (isset($_POST['drop'])) {
+    $feedback_id = $_POST['feedback_id'];
+    $exec = mysqli_query($conn, "UPDATE feedback SET status = 'dropped' WHERE feedback_id = '$feedback_id'");
+    if ($exec) {
+        echo "<script>alert('Dropped!')</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 
 
 <head>
@@ -282,14 +297,14 @@ if (!isset($_SESSION["admin_id"])) {
                             <div class="flex d-flex flex-column flex-sm-row align-items-center mb-24pt mb-md-0">
 
                                 <div class="mb-24pt mb-sm-0 mr-sm-24pt">
-                                    <h2 class="mb-0">Manage Instructors</h2>
+                                    <h2 class="mb-0">Manage Feedback</h2>
 
                                     <ol class="breadcrumb p-0 m-0">
                                         <li class="breadcrumb-item"><a href="./admin-dashboard.php">Dashboard</a></li>
 
                                         <li class="breadcrumb-item active">
 
-                                            Manage Instructors
+                                            Manage Feedback
 
                                         </li>
 
@@ -304,14 +319,13 @@ if (!isset($_SESSION["admin_id"])) {
                     <div class="page-section border-bottom-2">
                         <div class="container page__container">
                             <div class="page-separator">
-                                <div class="page-separator__text">Manage Instructors</div>
+                                <div class="page-separator__text">Manage Feedbacks</div>
                             </div>
-
                             <div class="card mb-32pt">
 
                                 <div class="table-responsive" data-toggle="lists" data-lists-sort-by="js-lists-values-from" data-lists-sort-desc="true" data-lists-values='["js-lists-values-first-name", "js-lists-values-last-name", "js-lists-values-email", "js-lists-values-action"]'>
 
-                                    <table class="table mb-0 thead-border-top-0 table-nowrap">
+                                    <table class="table mb-0 thead-border-top-0">
                                         <thead>
                                             <tr>
                                                 <th style="width: 18px;" class="pr-0">
@@ -321,13 +335,7 @@ if (!isset($_SESSION["admin_id"])) {
                                                     </div>
                                                 </th>
                                                 <th>
-                                                    <a href="javascript:void(0)" class="sort" data-sort="js-lists-values-first-name">First Name</a>
-                                                </th>
-                                                <th>
-                                                    <a href="javascript:void(0)" class="sort" data-sort="js-lists-values-last-name">Last Name</a>
-                                                </th>
-                                                <th>
-                                                    <a href="javascript:void(0)" class="sort" data-sort="js-lists-values-email">Email</a>
+                                                    <a href="javascript:void(0)" class="sort" data-sort="js-lists-values-first-name">Student Name</a>
                                                 </th>
                                                 <th style="width: 48px;" colspan="2" class="text-center">
                                                     <a href="javascript:void(0)" class="sort" data-sort="js-lists-values-action">Action</a>
@@ -338,7 +346,7 @@ if (!isset($_SESSION["admin_id"])) {
                                         <tbody class="list" id="leaves">
                                             <?php
                                             // Replace with your SQL query to retrieve the data from the instructor table
-                                            $sql = "SELECT * FROM instructor";
+                                            $sql = "SELECT * FROM feedback";
 
                                             // Execute the SQL query and fetch the data
                                             $result = mysqli_query($conn, $sql);
@@ -348,18 +356,30 @@ if (!isset($_SESSION["admin_id"])) {
                                                 <tr>
                                                     <td class="pr-0">
                                                         <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input js-check-selected-row" id="customCheck<?php echo $row['id']; ?>">
-                                                            <label class="custom-control-label" for="customCheck<?php echo $row['id']; ?>"><span class="text-hide">Check</span></label>
+                                                            <input type="checkbox" class="custom-control-input js-check-selected-row" id="customCheck<?php echo $row['feedback_id']; ?>">
+                                                            <label class="custom-control-label" for="customCheck<?php echo $row['feedback_id']; ?>"><span class="text-hide">Check</span></label>
                                                         </div>
                                                     </td>
-                                                    <td class="js-lists-values-first-name"><?php echo $row['first_name']; ?></td>
-                                                    <td class="js-lists-values-last-name"><?php echo $row['last_name']; ?></td>
-                                                    <td class="js-lists-values-email"><?php echo $row['email']; ?></td>
+                                                    <td class="js-lists-values-first-name"><?php echo $row['feedback']; ?></td>
                                                     <td>
-                                                        <a href="edit-instructor.php?id=<?php echo $row['id'] ?>" class="btn btn-secondary">Edit</a>
+                                                        <form action="" method="POST">
+                                                            <input type="text" name="feedback_id" value="<?php echo $row['feedback_id']; ?>" hidden>
+                                                            <input type="submit" name="approve" <?php if ($row['status'] == 'not-approved') {
+                                                                                                    echo 'class="btn btn-secondary" value="Approve"';
+                                                                                                } else {
+                                                                                                    echo 'class="btn btn-primary" value="Approved"';
+                                                                                                } ?>>
+                                                        </form>
                                                     </td>
                                                     <td>
-                                                    <a href="delete-instructor.php?id=<?php echo $row['id'] ?>" class="btn btn-danger">Delete</a>
+                                                        <form action="" method="post">
+                                                            <input type="text" name="feedback_id" value="<?php echo $row['feedback_id']; ?>" hidden>
+                                                            <input type="submit" class="btn btn-danger" name="drop" <?php if ($row['status'] == 'dropped') {
+                                                                                                                        echo 'class="btn btn-secondary" value="Dropped"';
+                                                                                                                    } else {
+                                                                                                                        echo 'class="btn btn-primary" value="Drop"';
+                                                                                                                    } ?> value="Drop">
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             <?php
@@ -424,7 +444,7 @@ if (!isset($_SESSION["admin_id"])) {
                                         <span class="sidebar-menu-text">Manage Courses</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-menu-item active">
+                                <li class="sidebar-menu-item">
                                     <a class="sidebar-menu-button" href="./admin-manage-instructor.php">
                                         <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">person</span>
                                         <span class="sidebar-menu-text">Manage Instructors</span>
@@ -436,7 +456,7 @@ if (!isset($_SESSION["admin_id"])) {
                                         <span class="sidebar-menu-text">Manage Students</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-menu-item">
+                                <li class="sidebar-menu-item active">
                                     <a class="sidebar-menu-button" href="./admin-manage-feedback.php">
                                         <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">person</span>
                                         <span class="sidebar-menu-text">Manage Feedback</span>

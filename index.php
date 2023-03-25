@@ -1,7 +1,37 @@
 <?php
+session_start();
 include "./Include/config.php";
 include "./Include/functions.php";
 $courses = get_courses(20);
+
+function get_feedback()
+{
+    global $conn;
+
+    $sql = "SELECT * FROM feedback WHERE status = 'approved'";
+    $result = mysqli_query($conn, $sql);
+    $feedback = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $feedback[] = $row;
+    }
+    return $feedback;
+}
+
+$feedbacks = get_feedback();
+$feedback_err = "";
+if (isset($_POST['send-feedback'])) {
+    if (empty($_POST['feedback'])) {
+        $feedback_err = "Please Enter feedback or comments";
+        echo '<script>alert("Please Enter feedback or comments")</script>';
+    } else {
+        $feedback = $_POST['feedback'];
+    }
+    $email = $_POST['email'];
+    if (empty($feedback_err)) {
+        $exec = mysqli_query($conn, "INSERT INTO feedback (student_email, feedback) VALUES ('$email', '$feedback')");
+        echo '<script>alert("Thank you for your feedback! It will be reviwed shortly.")</script>';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -202,7 +232,7 @@ $courses = get_courses(20);
                                                 <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary-dodger-blue js-overlay card-group-row__card" data-toggle="popover" data-trigger="click">
 
                                                     <a href=" ./Course/courses.php#<?php echo $course['course_id']; ?>" class="card-img-top js-image" data-position="" data-height="140">
-                                                        <img src="<?php echo $img_url ?>" alt="course" onerror="this.onerror=null;this.src='./Public/images/default_cover_image.png';" >
+                                                        <img src="<?php echo $img_url ?>" alt="course" onerror="this.onerror=null;this.src='./Public/images/default_cover_image.png';">
                                                         <span class="overlay__content">
                                                             <span class="overlay__action d-flex flex-column text-center">
                                                                 <i class="material-icons icon-32pt">play_circle_outline</i>
@@ -217,7 +247,7 @@ $courses = get_courses(20);
                                                                 <a class="card-title" href=" ./Course/courses.php#<?php echo $course['course_id']; ?>"><?php echo $course['course_title']; ?></a>
                                                                 <small class="text-50 font-weight-bold mb-4pt"><?php echo $instructor['first_name'] . ' ' . $instructor['last_name']; ?></small>
                                                             </div>
-                                                             
+
                                                         </div>
                                                         <div class="d-flex">
                                                             <div class="rating flex">
@@ -311,7 +341,7 @@ $courses = get_courses(20);
                                                 <p>No courses found.</p>
                                             </div>
                                         <?php endif; ?>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -326,101 +356,39 @@ $courses = get_courses(20);
                     <h2>Feedback</h2>
                     <p class="lead measure-lead mx-auto text-70">What other students turned professionals have to say about us after learning with us and reaching their goals.</p>
                 </div>
-
-                <div class="position-relative carousel-card p-0 mx-auto">
-                    <div class="row d-block js-mdk-carousel" id="carousel-feedback">
-                        <a class="carousel-control-next js-mdk-carousel-control mt-n24pt" href="#carousel-feedback" role="button" data-slide="next">
-                            <span class="carousel-control-icon material-icons" aria-hidden="true">keyboard_arrow_right</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                        <div class="mdk-carousel__content">
-
-                            <div class="col-12 col-md-6">
-
-                                <div class="card card-feedback card-body">
-                                    <blockquote class="blockquote mb-0">
-                                        <p class="text-70 small mb-0">A wonderful course on how to start. Eddie beautifully conveys all essentials of a becoming a good Angular developer. Very glad to have taken this course. Thank you Eddie Bryan.</p>
-                                    </blockquote>
-                                </div>
-                                <div class="media ml-12pt">
-                                    <div class="media-left mr-12pt">
-                                        <div class="avatar avatar-sm">
-                                            <!-- <img src="./Public/images/people/110/guy-.jpg" width="40" alt="avatar" class="rounded-circle"> -->
-                                            <span class="avatar-title rounded-circle">UK</span>
-                                        </div>
-                                    </div>
-                                    <div class="media-body media-middle">
-                                        <div class="card-title">Umberto Kass</div>
-                                        <div class="rating mt-4pt">
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star_border</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-
+                <div class="row">
+                    <?php foreach ($feedbacks as $feedback) : ?>
+                        <div class="col-md-4">
+                            <div class="card card-body">
+                                <blockquote class="blockquote mb-0">
+                                    <p class="text-70 small mb-0"><?php echo $feedback['feedback']; ?></p>
+                                </blockquote>
                             </div>
-
-                            <div class="col-12 col-md-6">
-
-                                <div class="card card-feedback card-body">
-                                    <blockquote class="blockquote mb-0">
-                                        <p class="text-70 small mb-0">A wonderful course on how to start. Eddie beautifully conveys all essentials of a becoming a good Angular developer. Very glad to have taken this course. Thank you Eddie Bryan.</p>
-                                    </blockquote>
-                                </div>
-                                <div class="media ml-12pt">
-                                    <div class="media-left mr-12pt">
-                                        <div href="./Student/student-profile.php" class="avatar avatar-sm">
-                                            <!-- <img src="./Public/images/people/110/guy-.jpg" width="40" alt="avatar" class="rounded-circle"> -->
-                                            <span class="avatar-title rounded-circle">UK</span>
-                                        </div>
-                                    </div>
-                                    <div class="media-body media-middle">
-                                        <div href="./Student/student-profile.php" class="card-title">Umberto Kass</div>
-                                        <div class="rating mt-4pt">
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star_border</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="col-12 col-md-6">
-
-                                <div class="card card-feedback card-body">
-                                    <blockquote class="blockquote mb-0">
-                                        <p class="text-70 small mb-0">A wonderful course on how to start. Eddie beautifully conveys all essentials of a becoming a good Angular developer. Very glad to have taken this course. Thank you Eddie Bryan.</p>
-                                    </blockquote>
-                                </div>
-                                <div class="media ml-12pt">
-                                    <div class="media-left mr-12pt">
-                                        <div href="./Student/student-profile.php" class="avatar avatar-sm">
-                                            <!-- <img src="./Public/images/people/110/guy-.jpg" width="40" alt="avatar" class="rounded-circle"> -->
-                                            <span class="avatar-title rounded-circle">UK</span>
-                                        </div>
-                                    </div>
-                                    <div class="media-body media-middle">
-                                        <div class="card-title">Umberto Kass</div>
-                                        <div class="rating mt-4pt">
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star</span></span>
-                                            <span class="rating__item"><span class="material-icons">star_border</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
                         </div>
-                    </div>
+                    <?php endforeach; ?>
+                    <?php if (empty($feedback)) : ?>
+                        <div class="col-md-12">
+                            <p>No feedbacks available.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <?php if (isset($_SESSION['email'])) {
+                    echo '';
+                } ?>
+                <div class="text-center p-3">
+                    <h3>Add feedback</h3>
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <input type="text" value="<?php echo $_SESSION['email']; ?>" name="email" hidden>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="feedback" id="" cols="60" rows="6" placeholder="Enter your feedback"></textarea>
+                            <p class="text-warning"><?php echo $feedback_err; ?></p>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Send" name="send-feedback" class="btn btn-primary">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

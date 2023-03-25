@@ -8,6 +8,28 @@ if (!isset($_SESSION["admin_id"])) {
     header("location: ./login.php");
     exit;
 }
+
+if (isset($_POST['approve'])) {
+    $course_id = $_POST['course_id'];
+    $exec = mysqli_query($conn, "UPDATE course SET status = 'approved' WHERE course_id = '$course_id'");
+    if ($exec) {
+        echo "<script>alert('Approved!')</script>";
+    }
+}
+if (isset($_POST['ask-edit'])) {
+    $course_id = $_POST['course_id'];
+    $exec = mysqli_query($conn, "UPDATE course SET status = 'to edit' WHERE course_id = '$course_id'");
+    if ($exec) {
+        echo "<script>alert('Request Sent')</script>";
+    }
+}
+if (isset($_POST['drop'])) {
+    $course_id = $_POST['course_id'];
+    $exec = mysqli_query($conn, "UPDATE course SET status = 'dropped' WHERE course_id = '$course_id'");
+    if ($exec) {
+        echo "<script>alert('Dropped!')</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -347,13 +369,30 @@ if (!isset($_SESSION["admin_id"])) {
                                                     </td>
                                                     <td class="js-lists-values-first-name"><?php echo $row['course_title']; ?></td>
                                                     <td>
-                                                        <button class="btn btn-primary">Approve</button>
+                                                        <form action="" method="POST">
+                                                            <input type="text" name="course_id" value="<?php echo $row['course_id']; ?>" hidden>
+                                                            <input type="submit" name="approve" <?php if ($row['status'] == 'not-approved') {
+                                                                                                    echo 'class="btn btn-secondary" value="Approve"';
+                                                                                                } else {
+                                                                                                    echo 'class="btn btn-primary" value="Approved"';
+                                                                                                } ?>>
+                                                        </form>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-secondary">Ask Edit</button>
+                                                        <form action="" method="post">
+                                                            <input type="text" name="course_id" value="<?php echo $row['course_id']; ?>" hidden>
+                                                            <input class="btn btn-secondary" name="ask-edit" type="submit" value="Ask Edit">
+                                                        </form>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-danger">Drop</button>
+                                                        <form action="" method="post">
+                                                            <input type="text" name="course_id" value="<?php echo $row['course_id']; ?>" hidden>
+                                                            <input type="submit" class="btn btn-danger" name="drop" <?php if ($row['status'] == 'dropped') {
+                                                                                                                        echo 'class="btn btn-secondary" value="Dropped"';
+                                                                                                                    } else {
+                                                                                                                        echo 'class="btn btn-primary" value="Drop"';
+                                                                                                                    } ?> value="Drop">
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             <?php
@@ -428,6 +467,12 @@ if (!isset($_SESSION["admin_id"])) {
                                     <a class="sidebar-menu-button" href="./admin-manage-student.php">
                                         <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">person</span>
                                         <span class="sidebar-menu-text">Manage Students</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" href="./admin-manage-feedback.php">
+                                        <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">person</span>
+                                        <span class="sidebar-menu-text">Manage Feedback</span>
                                     </a>
                                 </li>
                             </ul>

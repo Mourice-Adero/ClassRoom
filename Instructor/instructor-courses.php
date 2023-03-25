@@ -348,7 +348,7 @@ $courses = get_instructor_courses();
 
                                     <div class="card card-sm card--elevated p-relative o-hidden overlay overlay--primary js-overlay mdk-reveal js-mdk-reveal " data-overlay-onload-show data-popover-onload-show data-force-reveal data-partial-height="44" data-toggle="popover" data-trigger="click">
                                         <a href="" class="js-image" data-position="">
-                                            <img src="<?= $img_url ?>" alt="image" height="200" width="100%" onerror="this.onerror=null;this.src='./../Public/images/default_cover_image.png';" >
+                                            <img src="<?= $img_url ?>" alt="image" height="200" width="100%" onerror="this.onerror=null;this.src='./../Public/images/default_cover_image.png';">
                                             <span class="overlay__content align-items-start justify-content-start">
                                                 <span class="overlay__action card-body d-flex align-items-center">
                                                     <i class="material-icons mr-4pt">edit</i>
@@ -363,6 +363,9 @@ $courses = get_instructor_courses();
                                                         <a class="card-title mb-4pt" href=""><?php echo $course['course_title'] ?></a>
                                                     </div>
                                                     <a href="./instructor-edit-course.php?course_id=<?php echo $course['course_id']; ?>" class="ml-4pt material-icons text-20 card-course__icon-favorite">edit</a>
+                                                </div>
+                                                <div>
+                                                    <p class="bg-primary">Status:<?php echo $course['status']; ?></p>
                                                 </div>
                                                 <div class="d-flex">
                                                     <div class="rating flex">
@@ -380,7 +383,7 @@ $courses = get_instructor_courses();
                                     <div class="popoverContainer d-none">
                                         <div class="media">
                                             <div class="media-left mr-12pt">
-                                            <img src="<?= $img_url ?>" alt="course image"  width="40" height="40" class="rounded" onerror="this.onerror=null;this.src='./../Public/images/default_cover_image.png';">
+                                                <img src="<?= $img_url ?>" alt="course image" width="40" height="40" class="rounded" onerror="this.onerror=null;this.src='./../Public/images/default_cover_image.png';">
                                                 <img src="<?= $img_url ?>" width="40" height="40" alt="Angular" class="rounded">
                                             </div>
                                             <div class="media-body">

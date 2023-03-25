@@ -10,7 +10,7 @@ function get_courses($limit)
 {
     global $conn;
 
-    $sql = "SELECT * FROM course LIMIT $limit";
+    $sql = "SELECT * FROM course WHERE status = 'approved' LIMIT $limit";
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {

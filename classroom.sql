@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2023 at 06:24 PM
+-- Generation Time: Mar 25, 2023 at 10:16 PM
 -- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -67,7 +67,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `first_name`, `last_name`, `email`, `password`, `profile_pic`) VALUES
-(0, 'Garey', 'Smith', 'gareysmith1@gmail.com', 'Garey123', '');
+(1, 'Garey', 'Smith', 'gareysmith1@gmail.com', '$2y$10$oGww.PcVkYfQsEvS5ufTpeEn5X603zy1idAkQx/TZLFux.YNUgS7.', '');
 
 -- --------------------------------------------------------
 
@@ -85,17 +85,18 @@ CREATE TABLE `course` (
   `image_path` varchar(255) NOT NULL,
   `course_image` varchar(255) NOT NULL,
   `video_link` text NOT NULL,
-  `instructor_id` int(15) NOT NULL
+  `instructor_id` int(15) NOT NULL,
+  `status` varchar(15) NOT NULL DEFAULT 'not-approved'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `course`
 --
 
-INSERT INTO `course` (`course_id`, `course_title`, `course_description`, `course_introduction`, `course_content`, `file_path`, `image_path`, `course_image`, `video_link`, `instructor_id`) VALUES
-(5, 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/react js.jpg', '', 'https://www.youtube.com/ewrwe', 1),
-(6, 'Wireless Mobile Computing 2', 'Wireless Mobile Computing 2', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', 'dm1.jpg', 'https://www.youtube.com/ewrwe', 1),
-(7, 'React Js', 'This is description', 'This is introduction', 'This is content', './../Course/uploads/pdfs/ReactJS-Guide.pdf', './../Course/uploads/images/react js.jpg', 'react js.jpg', 'https://www.youtube.com/watch?v=w7ejDZ8SWv8', 1);
+INSERT INTO `course` (`course_id`, `course_title`, `course_description`, `course_introduction`, `course_content`, `file_path`, `image_path`, `course_image`, `video_link`, `instructor_id`, `status`) VALUES
+(5, 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/react js.jpg', '', 'https://www.youtube.com/ewrwe', 1, 'approved'),
+(6, 'Wireless Mobile Computing 2', 'Wireless Mobile Computing 2', 'Wireless Mobile Computing', 'Wireless Mobile Computing', './../Course/uploads/pdfs/PDF-WirelessAndMobileComputing.pdf', './../Course/uploads/images/dm1.jpg', 'dm1.jpg', 'https://www.youtube.com/ewrwe', 1, 'approved'),
+(7, 'React Js', 'This is description', 'This is introduction', 'This is content', './../Course/uploads/pdfs/ReactJS-Guide.pdf', './../Course/uploads/images/react js.jpg', 'react js.jpg', 'https://www.youtube.com/watch?v=w7ejDZ8SWv8', 1, 'to edit');
 
 -- --------------------------------------------------------
 
@@ -136,6 +137,28 @@ INSERT INTO `enroll_students` (`id`, `student_id`, `course_id`, `course_name`, `
 (23, 4, 7, 'React Js', 'Jane Doe', 1, 'Yes'),
 (24, 8, 5, 'Wireless Mobile Computing', 'Jane Doe', 1, 'Yes'),
 (25, 8, 7, 'React Js', 'Jane Doe', 1, 'Yes');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE `feedback` (
+  `feedback_id` int(15) NOT NULL,
+  `student_email` varchar(255) NOT NULL,
+  `feedback` text NOT NULL,
+  `status` varchar(15) NOT NULL DEFAULT 'not-approved'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `feedback`
+--
+
+INSERT INTO `feedback` (`feedback_id`, `student_email`, `feedback`, `status`) VALUES
+(1, 'johndoe@gmail.com', 'A wonderful course on how to start. Eddie beautifully conveys all essentials of a becoming a good Angular developer. Very glad to have taken this course. Thank you Eddie Bryan.', 'approved'),
+(2, 'johndoe@gmail.com', 'A wonderful course on how to start. Eddie beautifully conveys all essentials of a becoming a good Angular developer. Very glad to have taken this course. Thank you Eddie Bryan.', 'approved'),
+(3, 'gareysmith1@gmail.com', 'A wonderful course on how to start. Eddie beautifully conveys all essentials of a becoming a good Angular developer. Very glad to have taken this course. Thank you Eddie Bryan.', 'dropped');
 
 -- --------------------------------------------------------
 
@@ -248,6 +271,12 @@ ALTER TABLE `achievements`
   ADD PRIMARY KEY (`arch_id`);
 
 --
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `course`
 --
 ALTER TABLE `course`
@@ -264,6 +293,12 @@ ALTER TABLE `course_sections`
 --
 ALTER TABLE `enroll_students`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`feedback_id`);
 
 --
 -- Indexes for table `instructor`
@@ -300,6 +335,12 @@ ALTER TABLE `achievements`
   MODIFY `arch_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
@@ -316,6 +357,12 @@ ALTER TABLE `course_sections`
 --
 ALTER TABLE `enroll_students`
   MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `feedback_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `instructor`

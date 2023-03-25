@@ -435,6 +435,12 @@ if (!isset($_SESSION["admin_id"])) {
                                         <span class="sidebar-menu-text">Manage Students</span>
                                     </a>
                                 </li>
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" href="./admin-manage-feedback.php">
+                                        <span class="material-icons sidebar-menu-icon sidebar-menu-icon--left">person</span>
+                                        <span class="sidebar-menu-text">Manage Feedback</span>
+                                    </a>
+                                </li>
                             </ul>
 
                             <!-- // END Sidebar Content -->
