@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2023 at 10:16 PM
+-- Generation Time: Mar 26, 2023 at 03:34 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -163,6 +163,30 @@ INSERT INTO `feedback` (`feedback_id`, `student_email`, `feedback`, `status`) VA
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `helpcenter`
+--
+
+CREATE TABLE `helpcenter` (
+  `help_id` int(15) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `link` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `helpcenter`
+--
+
+INSERT INTO `helpcenter` (`help_id`, `title`, `content`, `link`) VALUES
+(1, 'How do I reset my password?', 'To reset your password, go to the login page and click on the \"Forgot Password\" link. Follow the instructions to reset your password.', 'https://example.com/help/reset-password'),
+(2, 'What payment methods do you accept?', 'We accept all major credit cards, PayPal, and bank transfers. You can choose your preferred payment method during checkout.', 'https://example.com/help/payment-methods'),
+(4, 'Do you offer all courses', 'Yes, you can find any course in the courses page.', 'http://localhost/classroom/Course/courses.php'),
+(5, 'How do I contact customer support?', 'You can contact our customer support team by email, phone, or live chat. Visit our \"Contact Us\" page for more information.', 'https://example.com/help/contact-us'),
+(6, 'How can I enroll to a course?', 'To enroll to a course, browse the courses page, you will find all the available courses. Once you find the desired course, you can enroll by clicking the enroll button.', 'http://localhost/classroom/Course/courses.php');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `instructor`
 --
 
@@ -301,6 +325,12 @@ ALTER TABLE `feedback`
   ADD PRIMARY KEY (`feedback_id`);
 
 --
+-- Indexes for table `helpcenter`
+--
+ALTER TABLE `helpcenter`
+  ADD PRIMARY KEY (`help_id`);
+
+--
 -- Indexes for table `instructor`
 --
 ALTER TABLE `instructor`
@@ -363,6 +393,12 @@ ALTER TABLE `enroll_students`
 --
 ALTER TABLE `feedback`
   MODIFY `feedback_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `helpcenter`
+--
+ALTER TABLE `helpcenter`
+  MODIFY `help_id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `instructor`
