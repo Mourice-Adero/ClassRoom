@@ -392,6 +392,47 @@ if (isset($_POST['send-feedback'])) {
                 </div>
             </div>
         </div>
+        <style>
+            .btn-floating {
+                position: relative;
+                overflow: hidden;
+                padding: 0;
+                width: 3rem;
+                height: 3rem;
+                line-height: 3rem;
+                border-radius: 50%;
+                text-align: center;
+            }
+
+            .rounded-circle {
+                border-radius: 50% !important;
+            }
+
+            .position-fixed {
+                position: fixed !important;
+            }
+
+            .bottom-0 {
+                bottom: 0 !important;
+            }
+
+            .end-0 {
+                right: 0 !important;
+            }
+
+            .mb-3 {
+                margin-bottom: 1rem !important;
+            }
+
+            .me-3 {
+                margin-right: 1rem !important;
+            }
+        </style>
+
+        <!-- Button to redirect to helpcenter page -->
+        <a href="help-center.php" class="btn btn-primary btn-floating rounded-circle position-fixed bottom-0 end-0 mb-3 me-3" style="z-index: 1030;">
+            <i class="bi bi-question-circle">Help</i>
+        </a>
 
         <!-- Footer -->
 
